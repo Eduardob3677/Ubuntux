@@ -1,6 +1,6 @@
 package com.ubuntux.shared.ubuntux.file;
 
-import static com.ubuntux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR_PATH;
+import static com.ubuntux.shared.ubuntux.TermuxConstants.TERMUX_PREFIX_DIR_PATH;
 
 import android.content.Context;
 import android.os.Environment;

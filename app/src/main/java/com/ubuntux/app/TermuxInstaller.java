@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static com.ubuntux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR;
-import static com.ubuntux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR_PATH;
-import static com.ubuntux.shared.termux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR;
-import static com.ubuntux.shared.termux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR_PATH;
+import static com.ubuntux.shared.ubuntux.TermuxConstants.TERMUX_PREFIX_DIR;
+import static com.ubuntux.shared.ubuntux.TermuxConstants.TERMUX_PREFIX_DIR_PATH;
+import static com.ubuntux.shared.ubuntux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR;
+import static com.ubuntux.shared.ubuntux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR_PATH;
 
 /**
  * Install the Ubuntu packages if necessary by following the below steps:
