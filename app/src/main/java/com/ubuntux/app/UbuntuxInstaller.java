@@ -184,6 +184,20 @@ final class UbuntuxInstaller {
                     }
 
                     Logger.logInfo(LOG_TAG, "Bootstrap packages installed successfully.");
+                    
+                    // Verify essential binaries are present
+                    File lsBinary = new File(UBUNTUX_PREFIX_DIR_PATH + "/usr/bin/ls");
+                    File bashBinary = new File(UBUNTUX_PREFIX_DIR_PATH + "/usr/bin/bash");
+                    File shBinary = new File(UBUNTUX_PREFIX_DIR_PATH + "/usr/bin/sh");
+                    
+                    Logger.logInfo(LOG_TAG, "Essential binary verification:");
+                    Logger.logInfo(LOG_TAG, "ls binary exists: " + lsBinary.exists() + " at " + lsBinary.getAbsolutePath());
+                    Logger.logInfo(LOG_TAG, "bash binary exists: " + bashBinary.exists() + " at " + bashBinary.getAbsolutePath());
+                    Logger.logInfo(LOG_TAG, "sh binary exists: " + shBinary.exists() + " at " + shBinary.getAbsolutePath());
+                    
+                    if (lsBinary.exists()) {
+                        Logger.logInfo(LOG_TAG, "ls binary permissions: " + (lsBinary.canExecute() ? "executable" : "not executable"));
+                    }
 
                     // Recreate env file since termux prefix was wiped earlier
                     UbuntuxShellEnvironment.writeEnvironmentToFile(activity);

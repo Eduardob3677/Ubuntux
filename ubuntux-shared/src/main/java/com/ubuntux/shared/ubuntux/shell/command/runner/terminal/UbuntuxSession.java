@@ -16,10 +16,13 @@ import com.ubuntux.shared.errors.Errno;
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.shell.command.environment.IShellEnvironment;
 import com.ubuntux.shared.shell.ShellUtils;
+import com.ubuntux.shared.ubuntux.UbuntuxBootstrap;
+import com.ubuntux.shared.ubuntux.shell.command.environment.UbuntuxShellEnvironment;
 import com.ubuntux.terminal.TerminalSession;
 import com.ubuntux.terminal.TerminalSessionClient;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -93,10 +96,24 @@ public class UbuntuxSession {
         boolean isLoginShell = false;
         if (executionCommand.executable == null) {
             if (!executionCommand.isFailsafe) {
-                for (String shellBinary : UnixShellEnvironment.LOGIN_SHELL_BINARIES) {
+                String[] shellBinaries;
+                // Use Ubuntu-specific shell selection for Ubuntu package manager
+                if (UbuntuxBootstrap.isAppPackageManagerUbuntu() && 
+                    shellEnvironmentClient instanceof UbuntuxShellEnvironment) {
+                    shellBinaries = UbuntuxShellEnvironment.getUbuntuLoginShellBinaries();
+                    Logger.logInfo(LOG_TAG, "Using Ubuntu shell selection priority: " + Arrays.toString(shellBinaries));
+                } else {
+                    shellBinaries = UnixShellEnvironment.LOGIN_SHELL_BINARIES;
+                    Logger.logInfo(LOG_TAG, "Using default Unix shell selection priority: " + Arrays.toString(shellBinaries));
+                }
+                
+                for (String shellBinary : shellBinaries) {
                     File shellFile = new File(defaultBinPath, shellBinary);
+                    Logger.logDebug(LOG_TAG, "Checking for shell: " + shellFile.getAbsolutePath() + 
+                                            " (exists: " + shellFile.exists() + ", executable: " + shellFile.canExecute() + ")");
                     if (shellFile.exists() && shellFile.canExecute()) {
                         executionCommand.executable = shellFile.getAbsolutePath();
+                        Logger.logInfo(LOG_TAG, "Selected shell: " + executionCommand.executable);
                         break;
                     }
                 }

@@ -82,14 +82,22 @@ public class UbuntuxShellEnvironment extends AndroidShellEnvironment {
         if (!isFailSafe) {
             environment.put(ENV_TMPDIR, UbuntuxConstants.UBUNTUX_TMP_PREFIX_DIR_PATH);
             if (UbuntuxBootstrap.isAppPackageManagerUbuntu()) {
-                // Ubuntu binaries use standard paths, no need for applets directory
-                environment.put(ENV_PATH, UbuntuxConstants.UBUNTUX_BIN_PREFIX_DIR_PATH);
+                // Ubuntu binaries use standard paths - include both usr/bin and bin directories
+                String ubuntuPath = UbuntuxConstants.UBUNTUX_BIN_PREFIX_DIR_PATH + ":" + 
+                                   UbuntuxConstants.UBUNTUX_PREFIX_DIR_PATH + "/sbin:" +
+                                   UbuntuxConstants.UBUNTUX_PREFIX_DIR_PATH + "/usr/sbin:" +
+                                   UbuntuxConstants.UBUNTUX_PREFIX_DIR_PATH + "/bin";
+                environment.put(ENV_PATH, ubuntuPath);
                 environment.put(ENV_LD_LIBRARY_PATH, UbuntuxConstants.UBUNTUX_LIB_PREFIX_DIR_PATH);
+                Logger.logInfo(LOG_TAG, "Ubuntu package manager detected - setting PATH to: " + ubuntuPath);
             } else {
                 // Standard binaries rely on DT_RUNPATH, so LD_LIBRARY_PATH should be unset by default
                 environment.put(ENV_PATH, UbuntuxConstants.UBUNTUX_BIN_PREFIX_DIR_PATH);
                 environment.remove(ENV_LD_LIBRARY_PATH);
+                Logger.logInfo(LOG_TAG, "Non-Ubuntu package manager - setting PATH to: " + UbuntuxConstants.UBUNTUX_BIN_PREFIX_DIR_PATH);
             }
+        } else {
+            Logger.logInfo(LOG_TAG, "Failsafe mode enabled - not setting custom PATH");
         }
 
         return environment;
@@ -112,6 +120,15 @@ public class UbuntuxShellEnvironment extends AndroidShellEnvironment {
     @Override
     public String[] setupShellCommandArguments(@NonNull String executable, String[] arguments) {
         return UbuntuxShellUtils.setupShellCommandArguments(executable, arguments);
+    }
+
+    /**
+     * Get preferred shell binaries for Ubuntu in order of preference.
+     * Unlike the generic Unix environment, Ubuntu typically doesn't use 'login' command
+     * in the same way, so we prioritize bash which is the default Ubuntu shell.
+     */
+    public static String[] getUbuntuLoginShellBinaries() {
+        return new String[]{"bash", "sh", "dash", "zsh", "fish"};
     }
 
 }
