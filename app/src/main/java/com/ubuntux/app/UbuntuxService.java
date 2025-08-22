@@ -784,7 +784,7 @@ public final class UbuntuxService extends Service implements AppShell.AppShellCl
 
         // Set pending intent to be launched when notification is clicked
         Intent notificationIntent = UbuntuxActivity.newInstance(this);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, getPendingIntentFlags());
 
 
         // Set notification text
@@ -827,7 +827,7 @@ public final class UbuntuxService extends Service implements AppShell.AppShellCl
 
         // Set Exit button action
         Intent exitIntent = new Intent(this, UbuntuxService.class).setAction(UBUNTUX_SERVICE.ACTION_STOP_SERVICE);
-        builder.addAction(android.R.drawable.ic_delete, res.getString(R.string.notification_action_exit), PendingIntent.getService(this, 0, exitIntent, 0));
+        builder.addAction(android.R.drawable.ic_delete, res.getString(R.string.notification_action_exit), PendingIntent.getService(this, 0, exitIntent, getPendingIntentFlags()));
 
 
         // Set Wakelock button actions
@@ -835,7 +835,7 @@ public final class UbuntuxService extends Service implements AppShell.AppShellCl
         Intent toggleWakeLockIntent = new Intent(this, UbuntuxService.class).setAction(newWakeAction);
         String actionTitle = res.getString(wakeLockHeld ? R.string.notification_action_wake_unlock : R.string.notification_action_wake_lock);
         int actionIcon = wakeLockHeld ? android.R.drawable.ic_lock_idle_lock : android.R.drawable.ic_lock_lock;
-        builder.addAction(actionIcon, actionTitle, PendingIntent.getService(this, 0, toggleWakeLockIntent, 0));
+        builder.addAction(actionIcon, actionTitle, PendingIntent.getService(this, 0, toggleWakeLockIntent, getPendingIntentFlags()));
 
 
         return builder.build();
@@ -846,6 +846,19 @@ public final class UbuntuxService extends Service implements AppShell.AppShellCl
 
         NotificationUtils.setupNotificationChannel(this, UbuntuxConstants.UBUNTUX_APP_NOTIFICATION_CHANNEL_ID,
             UbuntuxConstants.UBUNTUX_APP_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+    }
+
+    /**
+     * Get appropriate flags for PendingIntent based on Android API level.
+     * On Android S+ (API 31+), FLAG_IMMUTABLE is required.
+     * On older versions, 0 is used for backward compatibility.
+     */
+    private int getPendingIntentFlags() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return PendingIntent.FLAG_IMMUTABLE;
+        } else {
+            return 0;
+        }
     }
 
     /** Update the shown foreground service notification after making any changes that affect it. */
