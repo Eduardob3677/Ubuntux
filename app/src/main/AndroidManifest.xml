@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ubuntux"
     android:installLocation="internalOnly"
-    android:sharedUserId="${TERMUX_PACKAGE_NAME}"
+    android:sharedUserId="${UBUNTUX_PACKAGE_NAME}"
     android:sharedUserLabel="@string/shared_user_label">
 
     <uses-feature
@@ -14,7 +14,7 @@
         android:required="false" />
 
     <permission
-        android:name="${TERMUX_PACKAGE_NAME}.permission.RUN_COMMAND"
+        android:name="${UBUNTUX_PACKAGE_NAME}.permission.RUN_COMMAND"
         android:description="@string/permission_run_command_description"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/permission_run_command_label"
@@ -38,7 +38,7 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
 
     <application
-        android:name=".app.TermuxApplication"
+        android:name=".app.UbuntuxApplication"
         android:allowBackup="false"
         android:banner="@drawable/banner"
         android:extractNativeLibs="true"
@@ -114,7 +114,7 @@
             android:exported="false"
             android:noHistory="true"
             android:resizeableActivity="true"
-            android:taskAffinity="${TERMUX_PACKAGE_NAME}.filereceiver"
+            android:taskAffinity="${UBUNTUX_PACKAGE_NAME}.filereceiver"
             tools:targetApi="n">
         </activity>
 
@@ -159,8 +159,8 @@
         </activity-alias>
 
         <provider
-            android:name=".filepicker.TermuxDocumentsProvider"
-            android:authorities="${TERMUX_PACKAGE_NAME}.documents"
+            android:name=".filepicker.UbuntuxDocumentsProvider"
+            android:authorities="${UBUNTUX_PACKAGE_NAME}.documents"
             android:exported="true"
             android:grantUriPermissions="true"
             android:permission="android.permission.MANAGE_DOCUMENTS">
@@ -170,15 +170,15 @@
         </provider>
 
         <provider
-            android:name=".app.TermuxOpenReceiver$ContentProvider"
-            android:authorities="${TERMUX_PACKAGE_NAME}.files"
+            android:name=".app.UbuntuxOpenReceiver$ContentProvider"
+            android:authorities="${UBUNTUX_PACKAGE_NAME}.files"
             android:exported="true"
             android:grantUriPermissions="true"
-            android:permission="${TERMUX_PACKAGE_NAME}.permission.RUN_COMMAND" />
+            android:permission="${UBUNTUX_PACKAGE_NAME}.permission.RUN_COMMAND" />
 
 
         <receiver
-            android:name=".app.TermuxOpenReceiver"
+            android:name=".app.UbuntuxOpenReceiver"
             android:exported="false" />
 
         <receiver
@@ -195,15 +195,15 @@
 
 
         <service
-            android:name=".app.TermuxService"
+            android:name=".app.UbuntuxService"
             android:exported="false" />
 
         <service
             android:name=".app.RunCommandService"
             android:exported="true"
-            android:permission="${TERMUX_PACKAGE_NAME}.permission.RUN_COMMAND">
+            android:permission="${UBUNTUX_PACKAGE_NAME}.permission.RUN_COMMAND">
             <intent-filter>
-                <action android:name="${TERMUX_PACKAGE_NAME}.RUN_COMMAND" />
+                <action android:name="${UBUNTUX_PACKAGE_NAME}.RUN_COMMAND" />
             </intent-filter>
         </service>
 

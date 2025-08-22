@@ -17,14 +17,14 @@ import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.net.uri.UriUtils;
 import com.ubuntux.shared.interact.MessageDialogUtils;
 import com.ubuntux.shared.net.uri.UriScheme;
-import com.ubuntux.shared.termux.interact.TextInputDialogUtils;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.TermuxConstants.TERMUX_APP;
-import com.ubuntux.shared.termux.TermuxConstants.TERMUX_APP.TERMUX_SERVICE;
-import com.ubuntux.app.TermuxService;
+import com.ubuntux.shared.ubuntux.interact.TextInputDialogUtils;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_APP;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_APP.UBUNTUX_SERVICE;
+import com.ubuntux.app.UbuntuxService;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.settings.properties.TermuxAppSharedProperties;
-import com.ubuntux.shared.termux.settings.properties.TermuxPropertyConstants;
+import com.ubuntux.shared.ubuntux.settings.properties.UbuntuxAppSharedProperties;
+import com.ubuntux.shared.ubuntux.settings.properties.UbuntuxPropertyConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -38,9 +38,9 @@ import java.util.regex.Pattern;
 
 public class FileReceiverActivity extends AppCompatActivity {
 
-    static final String TERMUX_RECEIVEDIR = TermuxConstants.TERMUX_FILES_DIR_PATH + "/home/downloads";
-    static final String EDITOR_PROGRAM = TermuxConstants.TERMUX_HOME_DIR_PATH + "/bin/termux-file-editor";
-    static final String URL_OPENER_PROGRAM = TermuxConstants.TERMUX_HOME_DIR_PATH + "/bin/termux-url-opener";
+    static final String UBUNTUX_RECEIVEDIR = UbuntuxConstants.UBUNTUX_FILES_DIR_PATH + "/home/downloads";
+    static final String EDITOR_PROGRAM = UbuntuxConstants.UBUNTUX_HOME_DIR_PATH + "/bin/termux-file-editor";
+    static final String URL_OPENER_PROGRAM = UbuntuxConstants.UBUNTUX_HOME_DIR_PATH + "/bin/termux-url-opener";
 
     /**
      * If the activity should be finished when the name input dialog is dismissed. This is disabled
@@ -50,7 +50,7 @@ public class FileReceiverActivity extends AppCompatActivity {
      */
     boolean mFinishOnDismissNameDialog = true;
 
-    private static final String API_TAG = TermuxConstants.TERMUX_APP_NAME + "FileReceiver";
+    private static final String API_TAG = UbuntuxConstants.UBUNTUX_APP_NAME + "FileReceiver";
 
     private static final String LOG_TAG = "FileReceiverActivity";
 
@@ -176,18 +176,18 @@ public class FileReceiverActivity extends AppCompatActivity {
 
                 final Uri scriptUri = UriUtils.getFileUri(EDITOR_PROGRAM);
 
-                Intent executeIntent = new Intent(TERMUX_SERVICE.ACTION_SERVICE_EXECUTE, scriptUri);
-                executeIntent.setClass(FileReceiverActivity.this, TermuxService.class);
-                executeIntent.putExtra(TERMUX_SERVICE.EXTRA_ARGUMENTS, new String[]{outFile.getAbsolutePath()});
+                Intent executeIntent = new Intent(UBUNTUX_SERVICE.ACTION_SERVICE_EXECUTE, scriptUri);
+                executeIntent.setClass(FileReceiverActivity.this, UbuntuxService.class);
+                executeIntent.putExtra(UBUNTUX_SERVICE.EXTRA_ARGUMENTS, new String[]{outFile.getAbsolutePath()});
                 startService(executeIntent);
                 finish();
             },
             R.string.action_file_received_open_directory, text -> {
                 if (saveStreamWithName(in, text) == null) return;
 
-                Intent executeIntent = new Intent(TERMUX_SERVICE.ACTION_SERVICE_EXECUTE);
-                executeIntent.putExtra(TERMUX_SERVICE.EXTRA_WORKDIR, TERMUX_RECEIVEDIR);
-                executeIntent.setClass(FileReceiverActivity.this, TermuxService.class);
+                Intent executeIntent = new Intent(UBUNTUX_SERVICE.ACTION_SERVICE_EXECUTE);
+                executeIntent.putExtra(UBUNTUX_SERVICE.EXTRA_WORKDIR, UBUNTUX_RECEIVEDIR);
+                executeIntent.setClass(FileReceiverActivity.this, UbuntuxService.class);
                 startService(executeIntent);
                 finish();
             },
@@ -197,7 +197,7 @@ public class FileReceiverActivity extends AppCompatActivity {
     }
 
     public File saveStreamWithName(InputStream in, String attachmentFileName) {
-        File receiveDir = new File(TERMUX_RECEIVEDIR);
+        File receiveDir = new File(UBUNTUX_RECEIVEDIR);
 
         if (DataUtils.isNullOrEmpty(attachmentFileName)) {
             showErrorDialogAndQuit("File name cannot be null or empty");
@@ -240,40 +240,40 @@ public class FileReceiverActivity extends AppCompatActivity {
 
         final Uri urlOpenerProgramUri = UriUtils.getFileUri(URL_OPENER_PROGRAM);
 
-        Intent executeIntent = new Intent(TERMUX_SERVICE.ACTION_SERVICE_EXECUTE, urlOpenerProgramUri);
-        executeIntent.setClass(FileReceiverActivity.this, TermuxService.class);
-        executeIntent.putExtra(TERMUX_SERVICE.EXTRA_ARGUMENTS, new String[]{url});
+        Intent executeIntent = new Intent(UBUNTUX_SERVICE.ACTION_SERVICE_EXECUTE, urlOpenerProgramUri);
+        executeIntent.setClass(FileReceiverActivity.this, UbuntuxService.class);
+        executeIntent.putExtra(UBUNTUX_SERVICE.EXTRA_ARGUMENTS, new String[]{url});
         startService(executeIntent);
         finish();
     }
 
     /**
-     * Update {@link TERMUX_APP#FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
-     * {@link TermuxPropertyConstants#KEY_DISABLE_FILE_SHARE_RECEIVER} value and
-     * {@link TERMUX_APP#FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
-     * {@link TermuxPropertyConstants#KEY_DISABLE_FILE_VIEW_RECEIVER} value.
+     * Update {@link UBUNTUX_APP#FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
+     * {@link UbuntuxPropertyConstants#KEY_DISABLE_FILE_SHARE_RECEIVER} value and
+     * {@link UBUNTUX_APP#FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME} component state depending on
+     * {@link UbuntuxPropertyConstants#KEY_DISABLE_FILE_VIEW_RECEIVER} value.
      */
     public static void updateFileReceiverActivityComponentsState(@NonNull Context context) {
         new Thread() {
             @Override
             public void run() {
-                TermuxAppSharedProperties properties = TermuxAppSharedProperties.getProperties();
+                UbuntuxAppSharedProperties properties = UbuntuxAppSharedProperties.getProperties();
 
                 String errmsg;
                 boolean state;
 
                 state = !properties.isFileShareReceiverDisabled();
-                Logger.logVerbose(LOG_TAG, "Setting " + TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
-                errmsg = PackageUtils.setComponentState(context,TermuxConstants.TERMUX_PACKAGE_NAME,
-                    TERMUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME,
+                Logger.logVerbose(LOG_TAG, "Setting " + UBUNTUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
+                errmsg = PackageUtils.setComponentState(context,UbuntuxConstants.UBUNTUX_PACKAGE_NAME,
+                    UBUNTUX_APP.FILE_SHARE_RECEIVER_ACTIVITY_CLASS_NAME,
                     state, null, false, false);
                 if (errmsg != null)
                     Logger.logError(LOG_TAG, errmsg);
 
                 state = !properties.isFileViewReceiverDisabled();
-                Logger.logVerbose(LOG_TAG, "Setting " + TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
-                errmsg = PackageUtils.setComponentState(context,TermuxConstants.TERMUX_PACKAGE_NAME,
-                    TERMUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME,
+                Logger.logVerbose(LOG_TAG, "Setting " + UBUNTUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME + " component state to " + state);
+                errmsg = PackageUtils.setComponentState(context,UbuntuxConstants.UBUNTUX_PACKAGE_NAME,
+                    UBUNTUX_APP.FILE_VIEW_RECEIVER_ACTIVITY_CLASS_NAME,
                     state, null, false, false);
                 if (errmsg != null)
                     Logger.logError(LOG_TAG, errmsg);

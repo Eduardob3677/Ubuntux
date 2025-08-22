@@ -171,7 +171,7 @@ public class KeyboardUtils {
              * when switching back from another app. Soft keyboard can be temporarily enabled in
              * show/hide soft keyboard toggle behaviour with keyboard toggle buttons and will continue
              * to work when tapping on terminal view for opening and back button for closing, until
-             * Termux app is switched to another app. After returning back, keyboard will be disabled
+             * Ubuntux app is switched to another app. After returning back, keyboard will be disabled
              * until toggle is pressed again.
              * This may also be helpful for the Lineage OS bug where if "Show soft keyboard" toggle
              * in "Language and Input" is disabled and Termux is started without a hardware keyboard

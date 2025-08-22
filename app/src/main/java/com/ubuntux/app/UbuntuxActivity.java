@@ -31,29 +31,29 @@ import android.widget.Toast;
 import com.ubuntux.R;
 import com.ubuntux.app.api.file.FileReceiverActivity;
 import com.ubuntux.app.terminal.UbuntuxActivityRootView;
-import com.ubuntux.app.terminal.TermuxTerminalSessionActivityClient;
-import com.ubuntux.app.terminal.io.TermuxTerminalExtraKeys;
+import com.ubuntux.app.terminal.UbuntuxTerminalSessionActivityClient;
+import com.ubuntux.app.terminal.io.UbuntuxTerminalExtraKeys;
 import com.ubuntux.shared.activities.ReportActivity;
 import com.ubuntux.shared.activity.ActivityUtils;
 import com.ubuntux.shared.activity.media.AppCompatActivityUtils;
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.android.PermissionUtils;
 import com.ubuntux.shared.data.DataUtils;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.TermuxConstants.TERMUX_APP.TERMUX_ACTIVITY;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_APP.UBUNTUX_ACTIVITY;
 import com.ubuntux.app.activities.HelpActivity;
 import com.ubuntux.app.activities.SettingsActivity;
-import com.ubuntux.shared.termux.crash.TermuxCrashUtils;
-import com.ubuntux.shared.termux.settings.preferences.TermuxAppSharedPreferences;
-import com.ubuntux.app.terminal.TermuxSessionsListViewController;
+import com.ubuntux.shared.ubuntux.crash.UbuntuxCrashUtils;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxAppSharedPreferences;
+import com.ubuntux.app.terminal.UbuntuxSessionsListViewController;
 import com.ubuntux.app.terminal.io.TerminalToolbarViewPager;
-import com.ubuntux.app.terminal.TermuxTerminalViewClient;
-import com.ubuntux.shared.termux.extrakeys.ExtraKeysView;
-import com.ubuntux.shared.termux.interact.TextInputDialogUtils;
+import com.ubuntux.app.terminal.UbuntuxTerminalViewClient;
+import com.ubuntux.shared.ubuntux.extrakeys.ExtraKeysView;
+import com.ubuntux.shared.ubuntux.interact.TextInputDialogUtils;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.TermuxUtils;
-import com.ubuntux.shared.termux.settings.properties.TermuxAppSharedProperties;
-import com.ubuntux.shared.termux.theme.TermuxThemeUtils;
+import com.ubuntux.shared.ubuntux.UbuntuxUtils;
+import com.ubuntux.shared.ubuntux.settings.properties.UbuntuxAppSharedProperties;
+import com.ubuntux.shared.ubuntux.theme.UbuntuxThemeUtils;
 import com.ubuntux.shared.theme.NightMode;
 import com.ubuntux.shared.view.ViewUtils;
 import com.ubuntux.terminal.TerminalSession;
@@ -82,11 +82,11 @@ import java.util.Arrays;
 public final class UbuntuxActivity extends AppCompatActivity implements ServiceConnection {
 
     /**
-     * The connection to the {@link TermuxService}. Requested in {@link #onCreate(Bundle)} with a call to
+     * The connection to the {@link UbuntuxService}. Requested in {@link #onCreate(Bundle)} with a call to
      * {@link #bindService(Intent, ServiceConnection, int)}, and obtained and stored in
      * {@link #onServiceConnected(ComponentName, IBinder)}.
      */
-    TermuxService mTermuxService;
+    UbuntuxService mTermuxService;
 
     /**
      * The {@link TerminalView} shown in  {@link UbuntuxActivity} that displays the terminal.
@@ -97,23 +97,23 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
      *  The {@link TerminalViewClient} interface implementation to allow for communication between
      *  {@link TerminalView} and {@link UbuntuxActivity}.
      */
-    TermuxTerminalViewClient mTermuxTerminalViewClient;
+    UbuntuxTerminalViewClient mTermuxTerminalViewClient;
 
     /**
      *  The {@link TerminalSessionClient} interface implementation to allow for communication between
      *  {@link TerminalSession} and {@link UbuntuxActivity}.
      */
-    TermuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
+    UbuntuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
 
     /**
-     * Termux app shared preferences manager.
+     * Ubuntux app shared preferences manager.
      */
-    private TermuxAppSharedPreferences mPreferences;
+    private UbuntuxAppSharedPreferences mPreferences;
 
     /**
-     * Termux app SharedProperties loaded from termux.properties
+     * Ubuntux app SharedProperties loaded from termux.properties
      */
-    private TermuxAppSharedProperties mProperties;
+    private UbuntuxAppSharedProperties mProperties;
 
     /**
      * The root view of the {@link UbuntuxActivity}.
@@ -133,12 +133,12 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
     /**
      * The client for the {@link #mExtraKeysView}.
      */
-    TermuxTerminalExtraKeys mTermuxTerminalExtraKeys;
+    UbuntuxTerminalExtraKeys mTermuxTerminalExtraKeys;
 
     /**
      * The termux sessions list controller.
      */
-    TermuxSessionsListViewController mTermuxSessionListViewController;
+    UbuntuxSessionsListViewController mTermuxSessionListViewController;
 
     /**
      * The {@link UbuntuxActivity} broadcast receiver for various things like terminal style configuration changes.
@@ -163,7 +163,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     /**
      * If activity was restarted like due to call to {@link #recreate()} after receiving
-     * {@link TERMUX_ACTIVITY#ACTION_RELOAD_STYLE}, system dark night mode was changed or activity
+     * {@link UBUNTUX_ACTIVITY#ACTION_RELOAD_STYLE}, system dark night mode was changed or activity
      * was killed by android.
      */
     private boolean mIsActivityRecreated = false;
@@ -207,7 +207,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
         ReportActivity.deleteReportInfoFilesOlderThanXDays(this, 14, false);
 
         // Load Termux app SharedProperties from disk
-        mProperties = TermuxAppSharedProperties.getProperties();
+        mProperties = UbuntuxAppSharedProperties.getProperties();
         reloadProperties();
 
         setActivityTheme();
@@ -217,8 +217,8 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
         setContentView(R.layout.activity_ubuntux);
 
         // Load termux shared preferences
-        // This will also fail if TermuxConstants.TERMUX_PACKAGE_NAME does not equal applicationId
-        mPreferences = TermuxAppSharedPreferences.build(this, true);
+        // This will also fail if UbuntuxConstants.UBUNTUX_PACKAGE_NAME does not equal applicationId
+        mPreferences = UbuntuxAppSharedPreferences.build(this, true);
         if (mPreferences == null) {
             // An AlertDialog should have shown to kill the app, so we don't continue running activity code
             mIsInvalidState = true;
@@ -257,8 +257,8 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
         FileReceiverActivity.updateFileReceiverActivityComponentsState(this);
 
         try {
-            // Start the {@link TermuxService} and make it run regardless of who is bound to it
-            Intent serviceIntent = new Intent(this, TermuxService.class);
+            // Start the {@link UbuntuxService} and make it run regardless of who is bound to it
+            Intent serviceIntent = new Intent(this, UbuntuxService.class);
             startService(serviceIntent);
 
             // Attempt to bind to the service, this will call the {@link #onServiceConnected(ComponentName, IBinder)}
@@ -266,7 +266,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             if (!bindService(serviceIntent, this, 0))
                 throw new RuntimeException("bindService() failed");
         } catch (Exception e) {
-            Logger.logStackTraceWithMessage(LOG_TAG,"UbuntuxActivity failed to start TermuxService", e);
+            Logger.logStackTraceWithMessage(LOG_TAG,"UbuntuxActivity failed to start UbuntuxService", e);
             Logger.showToast(this,
                 getString(e.getMessage() != null && e.getMessage().contains("app is in background") ?
                     R.string.error_ubuntux_service_start_failed_bg : R.string.error_ubuntux_service_start_failed_general),
@@ -275,9 +275,9 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             return;
         }
 
-        // Send the {@link TermuxConstants#BROADCAST_TERMUX_OPENED} broadcast to notify apps that Termux
+        // Send the {@link UbuntuxConstants#BROADCAST_TERMUX_OPENED} broadcast to notify apps that Termux
         // app has been opened.
-        TermuxUtils.sendTermuxOpenedBroadcast(this);
+        UbuntuxUtils.sendTermuxOpenedBroadcast(this);
     }
 
     @Override
@@ -318,7 +318,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
         // Check if a crash happened on last run of the app or if a plugin crashed and show a
         // notification with the crash details if it did
-        TermuxCrashUtils.notifyAppCrashFromCrashLogFile(this, LOG_TAG);
+        UbuntuxCrashUtils.notifyAppCrashFromCrashLogFile(this, LOG_TAG);
 
         mIsOnResumeAfterOnCreate = false;
     }
@@ -388,7 +388,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
     public void onServiceConnected(ComponentName componentName, IBinder service) {
         Logger.logDebug(LOG_TAG, "onServiceConnected");
 
-        mTermuxService = ((TermuxService.LocalBinder) service).service;
+        mTermuxService = ((UbuntuxService.LocalBinder) service).service;
 
         setTermuxSessionsListView();
 
@@ -397,12 +397,12 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
         if (mTermuxService.isTermuxSessionsEmpty()) {
             if (mIsVisible) {
-                TermuxInstaller.setupBootstrapIfNeeded(UbuntuxActivity.this, () -> {
+                UbuntuxInstaller.setupBootstrapIfNeeded(UbuntuxActivity.this, () -> {
                     if (mTermuxService == null) return; // Activity might have been destroyed.
                     try {
                         boolean launchFailsafe = false;
                         if (intent != null && intent.getExtras() != null) {
-                            launchFailsafe = intent.getExtras().getBoolean(TERMUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
+                            launchFailsafe = intent.getExtras().getBoolean(UBUNTUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
                         }
                         mTermuxTerminalSessionActivityClient.addNewSession(launchFailsafe, null);
                     } catch (WindowManager.BadTokenException e) {
@@ -419,7 +419,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             // each time.
             if (!mIsActivityRecreated && intent != null && Intent.ACTION_RUN.equals(intent.getAction())) {
                 // Android 7.1 app shortcut from res/xml/shortcuts.xml.
-                boolean isFailSafe = intent.getBooleanExtra(TERMUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
+                boolean isFailSafe = intent.getBooleanExtra(UBUNTUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
                 mTermuxTerminalSessionActivityClient.addNewSession(isFailSafe, null);
             } else {
                 mTermuxTerminalSessionActivityClient.setCurrentSession(mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast());
@@ -434,7 +434,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
     public void onServiceDisconnected(ComponentName name) {
         Logger.logDebug(LOG_TAG, "onServiceDisconnected");
 
-        // Respect being stopped from the {@link TermuxService} notification action.
+        // Respect being stopped from the {@link UbuntuxService} notification action.
         finishActivityIfNotFinishing();
     }
 
@@ -454,7 +454,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     private void setActivityTheme() {
         // Update NightMode.APP_NIGHT_MODE
-        TermuxThemeUtils.setAppNightMode(mProperties.getNightMode());
+        UbuntuxThemeUtils.setAppNightMode(mProperties.getNightMode());
 
         // Set activity night mode. If NightMode.SYSTEM is set, then android will automatically
         // trigger recreation of activity when uiMode/dark mode configuration is changed so that
@@ -484,8 +484,8 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     private void setTermuxTerminalViewAndClients() {
         // Set termux terminal view and session clients
-        mTermuxTerminalSessionActivityClient = new TermuxTerminalSessionActivityClient(this);
-        mTermuxTerminalViewClient = new TermuxTerminalViewClient(this, mTermuxTerminalSessionActivityClient);
+        mTermuxTerminalSessionActivityClient = new UbuntuxTerminalSessionActivityClient(this);
+        mTermuxTerminalViewClient = new UbuntuxTerminalViewClient(this, mTermuxTerminalSessionActivityClient);
 
         // Set termux terminal view
         mTerminalView = findViewById(R.id.terminal_view);
@@ -500,7 +500,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     private void setTermuxSessionsListView() {
         ListView termuxSessionsListView = findViewById(R.id.terminal_sessions_list);
-        mTermuxSessionListViewController = new TermuxSessionsListViewController(this, mTermuxService.getTermuxSessions());
+        mTermuxSessionListViewController = new UbuntuxSessionsListViewController(this, mTermuxService.getTermuxSessions());
         termuxSessionsListView.setAdapter(mTermuxSessionListViewController);
         termuxSessionsListView.setOnItemClickListener(mTermuxSessionListViewController);
         termuxSessionsListView.setOnItemLongClickListener(mTermuxSessionListViewController);
@@ -509,7 +509,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
 
     private void setTerminalToolbarView(Bundle savedInstanceState) {
-        mTermuxTerminalExtraKeys = new TermuxTerminalExtraKeys(this, mTerminalView,
+        mTermuxTerminalExtraKeys = new UbuntuxTerminalExtraKeys(this, mTerminalView,
             mTermuxTerminalViewClient, mTermuxTerminalSessionActivityClient);
 
         final ViewPager terminalToolbarViewPager = getTerminalToolbarViewPager();
@@ -738,7 +738,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     private void showStylingDialog() {
         Intent stylingIntent = new Intent();
-        stylingIntent.setClassName(TermuxConstants.TERMUX_STYLING_PACKAGE_NAME, TermuxConstants.TERMUX_STYLING.TERMUX_STYLING_ACTIVITY_NAME);
+        stylingIntent.setClassName(UbuntuxConstants.UBUNTUX_STYLING_PACKAGE_NAME, UbuntuxConstants.UBUNTUX_STYLING.UBUNTUX_STYLING_ACTIVITY_NAME);
         try {
             startActivity(stylingIntent);
         } catch (ActivityNotFoundException | IllegalArgumentException e) {
@@ -746,7 +746,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             // However, crash reporting shows that it sometimes does, so catch it here.
             new AlertDialog.Builder(this).setMessage(getString(R.string.error_styling_not_installed))
                 .setPositiveButton(R.string.action_styling_install,
-                    (dialog, which) -> ActivityUtils.startActivity(this, new Intent(Intent.ACTION_VIEW, Uri.parse(TermuxConstants.TERMUX_STYLING_FDROID_PACKAGE_URL))))
+                    (dialog, which) -> ActivityUtils.startActivity(this, new Intent(Intent.ACTION_VIEW, Uri.parse(UbuntuxConstants.UBUNTUX_STYLING_FDROID_PACKAGE_URL))))
                 .setNegativeButton(android.R.string.cancel, null).show();
         }
     }
@@ -790,7 +790,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
                         Logger.logInfoAndShowToast(UbuntuxActivity.this, LOG_TAG,
                             getString(com.ubuntux.shared.R.string.msg_storage_permission_granted_on_request));
 
-                    TermuxInstaller.setupStorageSymlinks(UbuntuxActivity.this);
+                    UbuntuxInstaller.setupStorageSymlinks(UbuntuxActivity.this);
                 } else {
                     if (isPermissionCallback)
                         Logger.logInfoAndShowToast(UbuntuxActivity.this, LOG_TAG,
@@ -836,7 +836,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
         return mExtraKeysView;
     }
 
-    public TermuxTerminalExtraKeys getTermuxTerminalExtraKeys() {
+    public UbuntuxTerminalExtraKeys getTermuxTerminalExtraKeys() {
         return mTermuxTerminalExtraKeys;
     }
 
@@ -884,7 +884,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
 
 
-    public TermuxService getTermuxService() {
+    public UbuntuxService getTermuxService() {
         return mTermuxService;
     }
 
@@ -892,11 +892,11 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
         return mTerminalView;
     }
 
-    public TermuxTerminalViewClient getTermuxTerminalViewClient() {
+    public UbuntuxTerminalViewClient getTermuxTerminalViewClient() {
         return mTermuxTerminalViewClient;
     }
 
-    public TermuxTerminalSessionActivityClient getTermuxTerminalSessionClient() {
+    public UbuntuxTerminalSessionActivityClient getTermuxTerminalSessionClient() {
         return mTermuxTerminalSessionActivityClient;
     }
 
@@ -908,11 +908,11 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             return null;
     }
 
-    public TermuxAppSharedPreferences getPreferences() {
+    public UbuntuxAppSharedPreferences getPreferences() {
         return mPreferences;
     }
 
-    public TermuxAppSharedProperties getProperties() {
+    public UbuntuxAppSharedProperties getProperties() {
         return mProperties;
     }
 
@@ -921,16 +921,16 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
 
     public static void updateUbuntuxActivityStyling(Context context, boolean recreateActivity) {
         // Make sure that terminal styling is always applied.
-        Intent stylingIntent = new Intent(TERMUX_ACTIVITY.ACTION_RELOAD_STYLE);
-        stylingIntent.putExtra(TERMUX_ACTIVITY.EXTRA_RECREATE_ACTIVITY, recreateActivity);
+        Intent stylingIntent = new Intent(UBUNTUX_ACTIVITY.ACTION_RELOAD_STYLE);
+        stylingIntent.putExtra(UBUNTUX_ACTIVITY.EXTRA_RECREATE_ACTIVITY, recreateActivity);
         context.sendBroadcast(stylingIntent);
     }
 
     private void registerUbuntuxActivityBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(TERMUX_ACTIVITY.ACTION_NOTIFY_APP_CRASH);
-        intentFilter.addAction(TERMUX_ACTIVITY.ACTION_RELOAD_STYLE);
-        intentFilter.addAction(TERMUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS);
+        intentFilter.addAction(UBUNTUX_ACTIVITY.ACTION_NOTIFY_APP_CRASH);
+        intentFilter.addAction(UBUNTUX_ACTIVITY.ACTION_RELOAD_STYLE);
+        intentFilter.addAction(UBUNTUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS);
 
         registerReceiver(mUbuntuxActivityBroadcastReceiver, intentFilter);
     }
@@ -942,10 +942,10 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
     private void fixUbuntuxActivityBroadcastReceiverIntent(Intent intent) {
         if (intent == null) return;
 
-        String extraReloadStyle = intent.getStringExtra(TERMUX_ACTIVITY.EXTRA_RELOAD_STYLE);
+        String extraReloadStyle = intent.getStringExtra(UBUNTUX_ACTIVITY.EXTRA_RELOAD_STYLE);
         if ("storage".equals(extraReloadStyle)) {
-            intent.removeExtra(TERMUX_ACTIVITY.EXTRA_RELOAD_STYLE);
-            intent.setAction(TERMUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS);
+            intent.removeExtra(UBUNTUX_ACTIVITY.EXTRA_RELOAD_STYLE);
+            intent.setAction(UBUNTUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS);
         }
     }
 
@@ -958,15 +958,15 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
                 fixUbuntuxActivityBroadcastReceiverIntent(intent);
 
                 switch (intent.getAction()) {
-                    case TERMUX_ACTIVITY.ACTION_NOTIFY_APP_CRASH:
+                    case UBUNTUX_ACTIVITY.ACTION_NOTIFY_APP_CRASH:
                         Logger.logDebug(LOG_TAG, "Received intent to notify app crash");
-                        TermuxCrashUtils.notifyAppCrashFromCrashLogFile(context, LOG_TAG);
+                        UbuntuxCrashUtils.notifyAppCrashFromCrashLogFile(context, LOG_TAG);
                         return;
-                    case TERMUX_ACTIVITY.ACTION_RELOAD_STYLE:
+                    case UBUNTUX_ACTIVITY.ACTION_RELOAD_STYLE:
                         Logger.logDebug(LOG_TAG, "Received intent to reload styling");
-                        reloadActivityStyling(intent.getBooleanExtra(TERMUX_ACTIVITY.EXTRA_RECREATE_ACTIVITY, true));
+                        reloadActivityStyling(intent.getBooleanExtra(UBUNTUX_ACTIVITY.EXTRA_RECREATE_ACTIVITY, true));
                         return;
-                    case TERMUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS:
+                    case UBUNTUX_ACTIVITY.ACTION_REQUEST_PERMISSIONS:
                         Logger.logDebug(LOG_TAG, "Received intent to request storage permissions");
                         requestStoragePermission(false);
                         return;
@@ -986,7 +986,7 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
             }
 
             // Update NightMode.APP_NIGHT_MODE
-            TermuxThemeUtils.setAppNightMode(mProperties.getNightMode());
+            UbuntuxThemeUtils.setAppNightMode(mProperties.getNightMode());
         }
 
         setMargins();

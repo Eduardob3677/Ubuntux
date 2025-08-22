@@ -1,0 +1,446 @@
+package com.ubuntux.app;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
+import android.system.Os;
+import android.util.Pair;
+import android.view.WindowManager;
+
+import com.ubuntux.R;
+import com.ubuntux.shared.file.FileUtils;
+import com.ubuntux.shared.ubuntux.crash.UbuntuxCrashUtils;
+import com.ubuntux.shared.ubuntux.file.UbuntuxFileUtils;
+import com.ubuntux.shared.interact.MessageDialogUtils;
+import com.ubuntux.shared.logger.Logger;
+import com.ubuntux.shared.markdown.MarkdownUtils;
+import com.ubuntux.shared.errors.Error;
+import com.ubuntux.shared.android.PackageUtils;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants;
+import com.ubuntux.shared.ubuntux.UbuntuxUtils;
+import com.ubuntux.shared.ubuntux.shell.command.environment.UbuntuxShellEnvironment;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import static com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_PREFIX_DIR;
+import static com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_PREFIX_DIR_PATH;
+import static com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_STAGING_PREFIX_DIR;
+import static com.ubuntux.shared.ubuntux.UbuntuxConstants.UBUNTUX_STAGING_PREFIX_DIR_PATH;
+
+/**
+ * Install the Ubuntu packages if necessary by following the below steps:
+ * <p/>
+ * (1) If $PREFIX already exist, assume that it is correct and be done. Note that this relies on that we do not create a
+ * broken $PREFIX directory below.
+ * <p/>
+ * (2) A progress dialog is shown with "Installing..." message and a spinner.
+ * <p/>
+ * (3) A staging directory, $STAGING_PREFIX, is cleared if left over from broken installation below.
+ * <p/>
+ * (4) The zip file is loaded from a shared library.
+ * <p/>
+ * (5) The zip, containing entries relative to the $PREFIX, is is downloaded and extracted by a zip input stream
+ * continuously encountering zip file entries:
+ * <p/>
+ * (5.1) If the zip entry encountered is SYMLINKS.txt, go through it and remember all symlinks to setup.
+ * <p/>
+ * (5.2) For every other zip entry, extract it into $STAGING_PREFIX and set execute permissions if necessary.
+ */
+final class UbuntuxInstaller {
+
+    private static final String LOG_TAG = "UbuntuxInstaller";
+
+    /** Performs bootstrap setup if necessary. */
+    static void setupBootstrapIfNeeded(final Activity activity, final Runnable whenDone) {
+        String bootstrapErrorMessage;
+        Error filesDirectoryAccessibleError;
+
+        // This will also call Context.getFilesDir(), which should ensure that termux files directory
+        // is created if it does not already exist
+        filesDirectoryAccessibleError = UbuntuxFileUtils.isTermuxFilesDirectoryAccessible(activity, true, true);
+        boolean isFilesDirectoryAccessible = filesDirectoryAccessibleError == null;
+
+        // Termux can only be run as the primary user (device owner) since only that
+        // account has the expected file system paths. Verify that:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !PackageUtils.isCurrentUserThePrimaryUser(activity)) {
+            bootstrapErrorMessage = activity.getString(R.string.bootstrap_error_not_primary_user_message,
+                MarkdownUtils.getMarkdownCodeForString(UBUNTUX_PREFIX_DIR_PATH, false));
+            Logger.logError(LOG_TAG, "isFilesDirectoryAccessible: " + isFilesDirectoryAccessible);
+            Logger.logError(LOG_TAG, bootstrapErrorMessage);
+            sendBootstrapCrashReportNotification(activity, bootstrapErrorMessage);
+            MessageDialogUtils.exitAppWithErrorMessage(activity,
+                activity.getString(R.string.bootstrap_error_title),
+                bootstrapErrorMessage);
+            return;
+        }
+
+        if (!isFilesDirectoryAccessible) {
+            bootstrapErrorMessage = Error.getMinimalErrorString(filesDirectoryAccessibleError);
+            //noinspection SdCardPath
+            if (PackageUtils.isAppInstalledOnExternalStorage(activity) &&
+                !UbuntuxConstants.UBUNTUX_FILES_DIR_PATH.equals(activity.getFilesDir().getAbsolutePath().replaceAll("^/data/user/0/", "/data/data/"))) {
+                bootstrapErrorMessage += "\n\n" + activity.getString(R.string.bootstrap_error_installed_on_portable_sd,
+                    MarkdownUtils.getMarkdownCodeForString(UBUNTUX_PREFIX_DIR_PATH, false));
+            }
+
+            Logger.logError(LOG_TAG, bootstrapErrorMessage);
+            sendBootstrapCrashReportNotification(activity, bootstrapErrorMessage);
+            MessageDialogUtils.showMessage(activity,
+                activity.getString(R.string.bootstrap_error_title),
+                bootstrapErrorMessage, null);
+            return;
+        }
+
+        // If prefix directory exists, even if its a symlink to a valid directory and symlink is not broken/dangling
+        if (FileUtils.directoryFileExists(UBUNTUX_PREFIX_DIR_PATH, true)) {
+            if (UbuntuxFileUtils.isTermuxPrefixDirectoryEmpty()) {
+                Logger.logInfo(LOG_TAG, "The prefix directory \"" + UBUNTUX_PREFIX_DIR_PATH + "\" exists but is empty or only contains specific unimportant files.");
+            } else {
+                whenDone.run();
+                return;
+            }
+        } else if (FileUtils.fileExists(UBUNTUX_PREFIX_DIR_PATH, false)) {
+            Logger.logInfo(LOG_TAG, "The prefix directory \"" + UBUNTUX_PREFIX_DIR_PATH + "\" does not exist but another file exists at its destination.");
+        }
+
+        final ProgressDialog progress = ProgressDialog.show(activity, null, activity.getString(R.string.bootstrap_installer_body), true, false);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Logger.logInfo(LOG_TAG, "Installing " + UbuntuxConstants.UBUNTUX_APP_NAME + " Ubuntu packages.");
+
+                    Error error;
+
+                    // Delete prefix staging directory or any file at its destination
+                    error = FileUtils.deleteFile("prefix staging directory", UBUNTUX_STAGING_PREFIX_DIR_PATH, true);
+                    if (error != null) {
+                        showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                        return;
+                    }
+
+                    // Delete prefix directory or any file at its destination
+                    error = FileUtils.deleteFile("prefix directory", UBUNTUX_PREFIX_DIR_PATH, true);
+                    if (error != null) {
+                        showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                        return;
+                    }
+
+                    // Create prefix staging directory if it does not already exist and set required permissions
+                    error = UbuntuxFileUtils.isTermuxPrefixStagingDirectoryAccessible(true, true);
+                    if (error != null) {
+                        showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                        return;
+                    }
+
+                    // Create prefix directory if it does not already exist and set required permissions
+                    error = UbuntuxFileUtils.isTermuxPrefixDirectoryAccessible(true, true);
+                    if (error != null) {
+                        showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                        return;
+                    }
+
+                    Logger.logInfo(LOG_TAG, "Extracting bootstrap zip to prefix staging directory \"" + UBUNTUX_STAGING_PREFIX_DIR_PATH + "\".");
+
+                    final byte[] buffer = new byte[8096];
+                    final List<Pair<String, String>> symlinks = new ArrayList<>(50);
+
+                    final byte[] zipBytes = loadZipBytes();
+                    try (ZipInputStream zipInput = new ZipInputStream(new ByteArrayInputStream(zipBytes))) {
+                        ZipEntry zipEntry;
+                        while ((zipEntry = zipInput.getNextEntry()) != null) {
+                            if (zipEntry.getName().equals("SYMLINKS.txt")) {
+                                BufferedReader symlinksReader = new BufferedReader(new InputStreamReader(zipInput));
+                                String line;
+                                while ((line = symlinksReader.readLine()) != null) {
+                                    String[] parts = line.split("←");
+                                    if (parts.length != 2)
+                                        throw new RuntimeException("Malformed symlink line: " + line);
+                                    String oldPath = parts[0];
+                                    String newPath = UBUNTUX_STAGING_PREFIX_DIR_PATH + "/" + parts[1];
+                                    symlinks.add(Pair.create(oldPath, newPath));
+
+                                    error = ensureDirectoryExists(new File(newPath).getParentFile());
+                                    if (error != null) {
+                                        showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                                        return;
+                                    }
+                                }
+                            } else {
+                                String zipEntryName = zipEntry.getName();
+                                File targetFile = new File(UBUNTUX_STAGING_PREFIX_DIR_PATH, zipEntryName);
+                                boolean isDirectory = zipEntry.isDirectory();
+
+                                error = ensureDirectoryExists(isDirectory ? targetFile : targetFile.getParentFile());
+                                if (error != null) {
+                                    showBootstrapErrorDialog(activity, whenDone, Error.getErrorMarkdownString(error));
+                                    return;
+                                }
+
+                                if (!isDirectory) {
+                                    try (FileOutputStream outStream = new FileOutputStream(targetFile)) {
+                                        int readBytes;
+                                        while ((readBytes = zipInput.read(buffer)) != -1)
+                                            outStream.write(buffer, 0, readBytes);
+                                    }
+                                    if (zipEntryName.startsWith("bin/") || zipEntryName.startsWith("libexec") ||
+                                        zipEntryName.startsWith("lib/apt/apt-helper") || zipEntryName.startsWith("lib/apt/methods")) {
+                                        //noinspection OctalInteger
+                                        Os.chmod(targetFile.getAbsolutePath(), 0700);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (symlinks.isEmpty())
+                        throw new RuntimeException("No SYMLINKS.txt encountered");
+                    for (Pair<String, String> symlink : symlinks) {
+                        // Use explicit parameters to allow overwriting any file type during bootstrap
+                        // allowDangling=true, overwrite=true, overwriteOnlyIfDestIsASymlink=false
+                        Error symlinkError = FileUtils.createSymlinkFile("bootstrap symlink ", symlink.first, symlink.second, true, true, false);
+                        if (symlinkError != null) {
+                            throw new RuntimeException("Failed to create symlink from \"" + symlink.first + "\" to \"" + symlink.second + "\": " + symlinkError.toString());
+                        }
+                    }
+
+                    Logger.logInfo(LOG_TAG, "Moving prefix staging to prefix directory.");
+
+                    if (!UBUNTUX_STAGING_PREFIX_DIR.renameTo(UBUNTUX_PREFIX_DIR)) {
+                        throw new RuntimeException("Moving prefix staging to prefix directory failed");
+                    }
+
+                    Logger.logInfo(LOG_TAG, "Bootstrap packages installed successfully.");
+
+                    // Recreate env file since termux prefix was wiped earlier
+                    UbuntuxShellEnvironment.writeEnvironmentToFile(activity);
+
+                    activity.runOnUiThread(whenDone);
+
+                } catch (final Exception e) {
+                    showBootstrapErrorDialog(activity, whenDone, Logger.getStackTracesMarkdownString(null, Logger.getStackTracesStringArray(e)));
+
+                } finally {
+                    activity.runOnUiThread(() -> {
+                        try {
+                            progress.dismiss();
+                        } catch (RuntimeException e) {
+                            // Activity already dismissed - ignore.
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    public static void showBootstrapErrorDialog(Activity activity, Runnable whenDone, String message) {
+        Logger.logErrorExtended(LOG_TAG, "Bootstrap Error:\n" + message);
+
+        // Send a notification with the exception so that the user knows why bootstrap setup failed
+        sendBootstrapCrashReportNotification(activity, message);
+
+        activity.runOnUiThread(() -> {
+            try {
+                new AlertDialog.Builder(activity).setTitle(R.string.bootstrap_error_title).setMessage(R.string.bootstrap_error_body)
+                    .setNegativeButton(R.string.bootstrap_error_abort, (dialog, which) -> {
+                        dialog.dismiss();
+                        activity.finish();
+                    })
+                    .setPositiveButton(R.string.bootstrap_error_try_again, (dialog, which) -> {
+                        dialog.dismiss();
+                        FileUtils.deleteFile("termux prefix directory", UBUNTUX_PREFIX_DIR_PATH, true);
+                        UbuntuxInstaller.setupBootstrapIfNeeded(activity, whenDone);
+                    }).show();
+            } catch (WindowManager.BadTokenException e1) {
+                // Activity already dismissed - ignore.
+            }
+        });
+    }
+
+    private static void sendBootstrapCrashReportNotification(Activity activity, String message) {
+        final String title = UbuntuxConstants.UBUNTUX_APP_NAME + " Bootstrap Error";
+
+        // Add info of all install Termux plugin apps as well since their target sdk or installation
+        // on external/portable sd card can affect Termux app files directory access or exec.
+        UbuntuxCrashUtils.sendCrashReportNotification(activity, LOG_TAG,
+            title, null, "## " + title + "\n\n" + message + "\n\n" +
+                UbuntuxUtils.getTermuxDebugMarkdownString(activity),
+            true, false, UbuntuxUtils.AppInfoMode.UBUNTUX_AND_PLUGIN_PACKAGES, true);
+    }
+
+    static void setupStorageSymlinks(final Context context) {
+        final String LOG_TAG = "termux-storage";
+        final String title = UbuntuxConstants.UBUNTUX_APP_NAME + " Setup Storage Error";
+
+        Logger.logInfo(LOG_TAG, "Setting up storage symlinks.");
+
+        new Thread() {
+            public void run() {
+                try {
+                    Error error;
+                    File storageDir = UbuntuxConstants.UBUNTUX_STORAGE_HOME_DIR;
+
+                    error = FileUtils.clearDirectory("~/storage", storageDir.getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        UbuntuxCrashUtils.sendCrashReportNotification(context, LOG_TAG, title, null,
+                            "## " + title + "\n\n" + Error.getErrorMarkdownString(error),
+                            true, false, UbuntuxUtils.AppInfoMode.UBUNTUX_PACKAGE, true);
+                        return;
+                    }
+
+                    Logger.logInfo(LOG_TAG, "Setting up storage symlinks at ~/storage/shared, ~/storage/downloads, ~/storage/dcim, ~/storage/pictures, ~/storage/music and ~/storage/movies for directories in \"" + Environment.getExternalStorageDirectory().getAbsolutePath() + "\".");
+
+                    // Get primary storage root "/storage/emulated/0" symlink
+                    File sharedDir = Environment.getExternalStorageDirectory();
+                    error = FileUtils.createSymlinkFile("~/storage/shared ", sharedDir.getAbsolutePath(), new File(storageDir, "shared").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+                    error = FileUtils.createSymlinkFile("~/storage/documents ", documentsDir.getAbsolutePath(), new File(storageDir, "documents").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    error = FileUtils.createSymlinkFile("~/storage/downloads ", downloadsDir.getAbsolutePath(), new File(storageDir, "downloads").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+                    error = FileUtils.createSymlinkFile("~/storage/dcim ", dcimDir.getAbsolutePath(), new File(storageDir, "dcim").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    error = FileUtils.createSymlinkFile("~/storage/pictures ", picturesDir.getAbsolutePath(), new File(storageDir, "pictures").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+                    error = FileUtils.createSymlinkFile("~/storage/music ", musicDir.getAbsolutePath(), new File(storageDir, "music").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+                    error = FileUtils.createSymlinkFile("~/storage/movies ", moviesDir.getAbsolutePath(), new File(storageDir, "movies").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    File podcastsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+                    error = FileUtils.createSymlinkFile("~/storage/podcasts ", podcastsDir.getAbsolutePath(), new File(storageDir, "podcasts").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                        File audiobooksDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS);
+                        error = FileUtils.createSymlinkFile("~/storage/audiobooks ", audiobooksDir.getAbsolutePath(), new File(storageDir, "audiobooks").getAbsolutePath());
+                        if (error != null) {
+                            Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                            Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                            return;
+                        }
+                    }
+
+                    // Dir 0 should ideally be for primary storage
+                    // https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/base/core/java/android/app/ContextImpl.java;l=818
+                    // https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/base/core/java/android/os/Environment.java;l=219
+                    // https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/base/core/java/android/os/Environment.java;l=181
+                    // https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/base/services/core/java/com/android/server/StorageManagerService.java;l=3796
+                    // https://cs.android.com/android/platform/superproject/+/android-7.0.0_r36:frameworks/base/services/core/java/com/android/server/MountService.java;l=3053
+
+                    // Create "Android/data/com.ubuntux" symlinks
+                    File[] dirs = context.getExternalFilesDirs(null);
+                    if (dirs != null && dirs.length > 0) {
+                        for (int i = 0; i < dirs.length; i++) {
+                            File dir = dirs[i];
+                            if (dir == null) continue;
+                            String symlinkName = "external-" + i;
+                            Logger.logInfo(LOG_TAG, "Setting up storage symlinks at ~/storage/" + symlinkName + " for \"" + dir.getAbsolutePath() + "\".");
+                            error = FileUtils.createSymlinkFile("~/storage/" + symlinkName + " ", dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            if (error != null) {
+                                Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                                Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                                return;
+                            }
+                        }
+                    }
+
+                    // Create "Android/media/com.ubuntux" symlinks
+                    dirs = context.getExternalMediaDirs();
+                    if (dirs != null && dirs.length > 0) {
+                        for (int i = 0; i < dirs.length; i++) {
+                            File dir = dirs[i];
+                            if (dir == null) continue;
+                            String symlinkName = "media-" + i;
+                            Logger.logInfo(LOG_TAG, "Setting up storage symlinks at ~/storage/" + symlinkName + " for \"" + dir.getAbsolutePath() + "\".");
+                            error = FileUtils.createSymlinkFile("~/storage/" + symlinkName + " ", dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            if (error != null) {
+                                Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                                Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                                return;
+                            }
+                        }
+                    }
+
+                    Logger.logInfo(LOG_TAG, "Storage symlinks created successfully.");
+                } catch (Exception e) {
+                    Logger.logErrorAndShowToast(context, LOG_TAG, e.getMessage());
+                    Logger.logStackTraceWithMessage(LOG_TAG, "Setup Storage Error: Error setting up link", e);
+                    UbuntuxCrashUtils.sendCrashReportNotification(context, LOG_TAG, title, null,
+                        "## " + title + "\n\n" + Logger.getStackTracesMarkdownString(null, Logger.getStackTracesStringArray(e)),
+                        true, false, UbuntuxUtils.AppInfoMode.UBUNTUX_PACKAGE, true);
+                }
+            }
+        }.start();
+    }
+
+    private static Error ensureDirectoryExists(File directory) {
+        return FileUtils.createDirectoryFile(directory.getAbsolutePath());
+    }
+
+    public static byte[] loadZipBytes() {
+        // Only load the shared library when necessary to save memory usage.
+        System.loadLibrary("ubuntux-bootstrap");
+        return getZip();
+    }
+
+    public static native byte[] getZip();
+
+}

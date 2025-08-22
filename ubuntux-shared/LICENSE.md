@@ -1,4 +1,4 @@
-The `termux-shared` library is released under [MIT](https://opensource.org/licenses/MIT) license.
+The `ubuntux-shared` library is released under [MIT](https://opensource.org/licenses/MIT) license.
 
 ### Exceptions
 

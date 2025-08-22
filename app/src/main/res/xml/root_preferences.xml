@@ -1,38 +1,38 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        app:key="termux"
-        app:title="@string/termux_preferences_title"
-        app:summary="@string/termux_preferences_summary"
-        app:fragment="com.termux.app.fragments.settings.TermuxPreferencesFragment"/>
+        app:key="ubuntux"
+        app:title="@string/ubuntux_preferences_title"
+        app:summary="@string/ubuntux_preferences_summary"
+        app:fragment="com.ubuntux.app.fragments.settings.UbuntuxPreferencesFragment"/>
 
     <Preference
-        app:key="termux_api"
-        app:title="@string/termux_api_preferences_title"
-        app:summary="@string/termux_api_preferences_summary"
+        app:key="ubuntux_api"
+        app:title="@string/ubuntux_api_preferences_title"
+        app:summary="@string/ubuntux_api_preferences_summary"
         app:isPreferenceVisible="false"
-        app:fragment="com.termux.app.fragments.settings.TermuxAPIPreferencesFragment"/>
+        app:fragment="com.ubuntux.app.fragments.settings.UbuntuxAPIPreferencesFragment"/>
 
     <Preference
-        app:key="termux_float"
-        app:title="@string/termux_float_preferences_title"
-        app:summary="@string/termux_float_preferences_summary"
+        app:key="ubuntux_float"
+        app:title="@string/ubuntux_float_preferences_title"
+        app:summary="@string/ubuntux_float_preferences_summary"
         app:isPreferenceVisible="false"
-        app:fragment="com.termux.app.fragments.settings.TermuxFloatPreferencesFragment"/>
+        app:fragment="com.ubuntux.app.fragments.settings.UbuntuxFloatPreferencesFragment"/>
 
     <Preference
-        app:key="termux_tasker"
-        app:title="@string/termux_tasker_preferences_title"
-        app:summary="@string/termux_tasker_preferences_summary"
+        app:key="ubuntux_tasker"
+        app:title="@string/ubuntux_tasker_preferences_title"
+        app:summary="@string/ubuntux_tasker_preferences_summary"
         app:isPreferenceVisible="false"
-        app:fragment="com.termux.app.fragments.settings.TermuxTaskerPreferencesFragment"/>
+        app:fragment="com.ubuntux.app.fragments.settings.UbuntuxTaskerPreferencesFragment"/>
 
     <Preference
-        app:key="termux_widget"
-        app:title="@string/termux_widget_preferences_title"
-        app:summary="@string/termux_widget_preferences_summary"
+        app:key="ubuntux_widget"
+        app:title="@string/ubuntux_widget_preferences_title"
+        app:summary="@string/ubuntux_widget_preferences_summary"
         app:isPreferenceVisible="false"
-        app:fragment="com.termux.app.fragments.settings.TermuxWidgetPreferencesFragment"/>
+        app:fragment="com.ubuntux.app.fragments.settings.UbuntuxWidgetPreferencesFragment"/>
 
     <Preference
         app:key="about"

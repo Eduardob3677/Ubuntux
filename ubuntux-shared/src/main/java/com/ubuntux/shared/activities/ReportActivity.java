@@ -23,7 +23,7 @@ import com.ubuntux.shared.file.FileUtils;
 import com.ubuntux.shared.file.filesystem.FileType;
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.errors.Error;
-import com.ubuntux.shared.termux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants;
 import com.ubuntux.shared.markdown.MarkdownUtils;
 import com.ubuntux.shared.interact.ShareUtils;
 import com.ubuntux.shared.models.ReportInfo;
@@ -150,7 +150,7 @@ public class ReportActivity extends AppCompatActivity {
             if (mReportInfo.reportTitle != null)
                 actionBar.setTitle(mReportInfo.reportTitle);
             else
-                actionBar.setTitle(TermuxConstants.TERMUX_APP_NAME + " App Report");
+                actionBar.setTitle(UbuntuxConstants.UBUNTUX_APP_NAME + " App Report");
         }
 
 

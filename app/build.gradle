@@ -4,21 +4,21 @@ plugins {
 
 ext {
     // The packageVariant defines the bootstrap variant that will be included in the app APK.
-    // This must be supported by com.termux.shared.termux.TermuxBootstrap.PackageVariant or app will
+    // This must be supported by com.ubuntux.shared.ubuntux.UbuntuxBootstrap.PackageVariant or app will
     // crash at startup.
     // Bootstrap of a different variant must not be manually installed by the user after app installation
     // by replacing $PREFIX since app code is dependant on the variant used to build the APK.
     // Currently supported values are: [ "ubuntu-22.04" "ubuntu-20.04" ]
-    packageVariant = System.getenv("TERMUX_PACKAGE_VARIANT") ?: "ubuntu-22.04" // Default: "ubuntu-22.04"
+    packageVariant = System.getenv("UBUNTUX_PACKAGE_VARIANT") ?: "ubuntu-22.04" // Default: "ubuntu-22.04"
 }
 
 android {
     compileSdkVersion project.properties.compileSdkVersion.toInteger()
     ndkVersion = System.getenv("JITPACK_NDK_VERSION") ?: project.properties.ndkVersion
-    def appVersionName = System.getenv("TERMUX_APP_VERSION_NAME") ?: ""
-    def apkVersionTag = System.getenv("TERMUX_APK_VERSION_TAG") ?: ""
-    def splitAPKsForDebugBuilds = System.getenv("TERMUX_SPLIT_APKS_FOR_DEBUG_BUILDS") ?: "1"
-    def splitAPKsForReleaseBuilds = System.getenv("TERMUX_SPLIT_APKS_FOR_RELEASE_BUILDS") ?: "0" // F-Droid does not support split APKs #1904
+    def appVersionName = System.getenv("UBUNTUX_APP_VERSION_NAME") ?: ""
+    def apkVersionTag = System.getenv("UBUNTUX_APK_VERSION_TAG") ?: ""
+    def splitAPKsForDebugBuilds = System.getenv("UBUNTUX_SPLIT_APKS_FOR_DEBUG_BUILDS") ?: "1"
+    def splitAPKsForReleaseBuilds = System.getenv("UBUNTUX_SPLIT_APKS_FOR_RELEASE_BUILDS") ?: "0" // F-Droid does not support split APKs #1904
 
     dependencies {
         implementation "androidx.annotation:annotation:1.3.0"
@@ -47,10 +47,10 @@ android {
         if (appVersionName) versionName = appVersionName
         validateVersionName(versionName)
 
-        buildConfigField "String", "TERMUX_PACKAGE_VARIANT", "\"" + project.ext.packageVariant + "\"" // Used by TermuxApplication class
+        buildConfigField "String", "UBUNTUX_PACKAGE_VARIANT", "\"" + project.ext.packageVariant + "\"" // Used by UbuntuxApplication class
 
-        manifestPlaceholders.TERMUX_PACKAGE_NAME = "com.ubuntux"
-        manifestPlaceholders.TERMUX_APP_NAME = "Ubuntux"
+        manifestPlaceholders.UBUNTUX_PACKAGE_NAME = "com.ubuntux"
+        manifestPlaceholders.UBUNTUX_APP_NAME = "Ubuntux"
 
         externalNativeBuild {
             ndkBuild {
@@ -94,8 +94,8 @@ android {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
 
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     externalNativeBuild {
@@ -275,7 +275,7 @@ def convertTarXzToZip(File tarXzFile, File zipFile) {
             addZipEntry(zipOutput, filename, false, content)
         }
         
-        // Add SYMLINKS.txt file that TermuxInstaller expects
+        // Add SYMLINKS.txt file that UbuntuxInstaller expects
         def symlinks = """bash←bin/sh
 sh←bin/bash
 apt-get←usr/bin/apt
@@ -335,7 +335,7 @@ task downloadBootstraps() {
             logger.quiet("Downloading Ubuntu Noble (24.04) rootfs from proot-distro...")
             downloadUbuntuRootfs("ubuntu-noble")
         } else {
-            throw new GradleException("Unsupported TERMUX_PACKAGE_VARIANT \"" + packageVariant + "\"")
+            throw new GradleException("Unsupported UBUNTUX_PACKAGE_VARIANT \"" + packageVariant + "\"")
         }
     }
 }

@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.ubuntux.R;
 import com.ubuntux.app.UbuntuxActivity;
-import com.ubuntux.shared.termux.extrakeys.ExtraKeysView;
+import com.ubuntux.shared.ubuntux.extrakeys.ExtraKeysView;
 import com.ubuntux.terminal.TerminalSession;
 
 public class TerminalToolbarViewPager {

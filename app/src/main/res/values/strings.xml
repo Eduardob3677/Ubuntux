@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!DOCTYPE resources [
-    <!ENTITY TERMUX_PACKAGE_NAME "com.ubuntux">
-    <!ENTITY TERMUX_APP_NAME "Ubuntux">
-    <!ENTITY TERMUX_API_APP_NAME "Ubuntux:API">
-    <!ENTITY TERMUX_BOOT_APP_NAME "Ubuntux:Boot">
-    <!ENTITY TERMUX_FLOAT_APP_NAME "Ubuntux:Float">
-    <!ENTITY TERMUX_STYLING_APP_NAME "Ubuntux:Styling">
-    <!ENTITY TERMUX_TASKER_APP_NAME "Ubuntux:Tasker">
-    <!ENTITY TERMUX_WIDGET_APP_NAME "Ubuntux:Widget">
+    <!ENTITY UBUNTUX_PACKAGE_NAME "com.ubuntux">
+    <!ENTITY UBUNTUX_APP_NAME "Ubuntux">
+    <!ENTITY UBUNTUX_API_APP_NAME "Ubuntux:API">
+    <!ENTITY UBUNTUX_BOOT_APP_NAME "Ubuntux:Boot">
+    <!ENTITY UBUNTUX_FLOAT_APP_NAME "Ubuntux:Float">
+    <!ENTITY UBUNTUX_STYLING_APP_NAME "Ubuntux:Styling">
+    <!ENTITY UBUNTUX_TASKER_APP_NAME "Ubuntux:Tasker">
+    <!ENTITY UBUNTUX_WIDGET_APP_NAME "Ubuntux:Widget">
     ]>
 
 <resources>
 
-    <string name="application_name">&TERMUX_APP_NAME;</string>
-    <string name="shared_user_label">&TERMUX_APP_NAME; user</string>
+    <string name="application_name">&UBUNTUX_APP_NAME;</string>
+    <string name="shared_user_label">&UBUNTUX_APP_NAME; user</string>
 
 
 
     <!-- Ubuntux RUN_COMMAND permission -->
-    <string name="permission_run_command_label">Run commands in &TERMUX_APP_NAME; environment</string>
-    <string name="permission_run_command_description">execute arbitrary commands within &TERMUX_APP_NAME;
+    <string name="permission_run_command_label">Run commands in &UBUNTUX_APP_NAME; environment</string>
+    <string name="permission_run_command_description">execute arbitrary commands within &UBUNTUX_APP_NAME;
         environment and access files</string>
 
 
@@ -28,15 +28,15 @@
     <!-- Ubuntu Installation -->
     <string name="bootstrap_installer_body">Installing Ubuntu packages…</string>
     <string name="bootstrap_error_title">Unable to install Ubuntu</string>
-    <string name="bootstrap_error_body">&TERMUX_APP_NAME; was unable to install the Ubuntu packages.</string>
+    <string name="bootstrap_error_body">&UBUNTUX_APP_NAME; was unable to install the Ubuntu packages.</string>
     <string name="bootstrap_error_abort">Abort</string>
     <string name="bootstrap_error_try_again">Try again</string>
-    <string name="bootstrap_error_not_primary_user_message">&TERMUX_APP_NAME; can only be run as the primary user.
-        \nBootstrap binaries compiled for &TERMUX_APP_NAME; have hardcoded $PREFIX path and cannot be installed
+    <string name="bootstrap_error_not_primary_user_message">&UBUNTUX_APP_NAME; can only be run as the primary user.
+        \nBootstrap binaries compiled for &UBUNTUX_APP_NAME; have hardcoded $PREFIX path and cannot be installed
         under any path other than:\n%1$s.</string>
-    <string name="bootstrap_error_installed_on_portable_sd">&TERMUX_APP_NAME; cannot be installed on
+    <string name="bootstrap_error_installed_on_portable_sd">&UBUNTUX_APP_NAME; cannot be installed on
         portable/external/removable sd card on your device.
-        \nBootstrap binaries compiled for &TERMUX_APP_NAME; have hardcoded $PREFIX path and cannot be installed
+        \nBootstrap binaries compiled for &UBUNTUX_APP_NAME; have hardcoded $PREFIX path and cannot be installed
         under any path other than:\n%1$s.</string>
 
 
@@ -99,9 +99,9 @@
 
 
     <!-- UbuntuxService -->
-    <string name="error_display_over_other_apps_permission_not_granted_to_start_terminal">&TERMUX_APP_NAME; requires
+    <string name="error_display_over_other_apps_permission_not_granted_to_start_terminal">&UBUNTUX_APP_NAME; requires
         \"Display over other apps\" permission to start terminal sessions from background on Android >= 10.
-        Grants it from Settings -> Apps -> &TERMUX_APP_NAME; -> Advanced</string>
+        Grants it from Settings -> Apps -> &UBUNTUX_APP_NAME; -> Advanced</string>
     <string name="error_ubuntux_service_invalid_execution_command_runner">Invalid execution command runner to UbuntuxService: `%1$s`</string>
     <string name="error_ubuntux_service_unsupported_execution_command_runner">Unsupported execution command runner to UbuntuxService: `%1$s`</string>
     <string name="error_ubuntux_service_unsupported_execution_command_shell_create_mode">Unsupported execution command shell create mode to UbuntuxService: `%1$s`</string>
@@ -131,94 +131,94 @@
 
 
     <!-- Ubuntux Settings -->
-    <string name="title_activity_ubuntux_settings">&TERMUX_APP_NAME; Settings</string>
+    <string name="title_activity_ubuntux_settings">&UBUNTUX_APP_NAME; Settings</string>
 
     <!-- Ubuntux App Preferences -->
-    <string name="termux_preferences_title">&TERMUX_APP_NAME;</string>
-    <string name="termux_preferences_summary">Preferences for &TERMUX_APP_NAME; app</string>
+    <string name="ubuntux_preferences_title">&UBUNTUX_APP_NAME;</string>
+    <string name="ubuntux_preferences_summary">Preferences for &UBUNTUX_APP_NAME; app</string>
 
         <!-- Debugging Preferences -->
-        <string name="termux_debugging_preferences_title">Debugging</string>
-        <string name="termux_debugging_preferences_summary">Preferences for debugging</string>
+        <string name="ubuntux_debugging_preferences_title">Debugging</string>
+        <string name="ubuntux_debugging_preferences_summary">Preferences for debugging</string>
 
             <!-- Logging Category -->
-            <string name="termux_logging_header">Logging</string>
+            <string name="ubuntux_logging_header">Logging</string>
 
                 <!-- Log Level -->
-                <string name="termux_log_level_title">Log Level</string>
+                <string name="ubuntux_log_level_title">Log Level</string>
 
                 <!-- Terminal View Key Logging -->
-                <string name="termux_terminal_view_key_logging_enabled_title">Terminal View Key Logging</string>
-                <string name="termux_terminal_view_key_logging_enabled_off">Logs will not have entries for terminal view keys. (Default)</string>
-                <string name="termux_terminal_view_key_logging_enabled_on">Logcat logs will have entries for terminal view keys.
+                <string name="ubuntux_terminal_view_key_logging_enabled_title">Terminal View Key Logging</string>
+                <string name="ubuntux_terminal_view_key_logging_enabled_off">Logs will not have entries for terminal view keys. (Default)</string>
+                <string name="ubuntux_terminal_view_key_logging_enabled_on">Logcat logs will have entries for terminal view keys.
                     These are very verbose and should be disabled under normal circumstances or will cause performance issues.</string>
 
                 <!-- Plugin Error Notifications -->
 
 
                 <!-- Crash Report Notifications -->
-                <string name="termux_crash_report_notifications_enabled_title">Crash Report Notifications</string>
-                <string name="termux_crash_report_notifications_enabled_off">Disable notifications for crash reports.</string>
-                <string name="termux_crash_report_notifications_enabled_on">Show notifications for crash reports. (Default)</string>
+                <string name="ubuntux_crash_report_notifications_enabled_title">Crash Report Notifications</string>
+                <string name="ubuntux_crash_report_notifications_enabled_off">Disable notifications for crash reports.</string>
+                <string name="ubuntux_crash_report_notifications_enabled_on">Show notifications for crash reports. (Default)</string>
 
 
         <!-- Terminal IO Preferences -->
-        <string name="termux_terminal_io_preferences_title">Terminal I/O</string>
-        <string name="termux_terminal_io_preferences_summary">Preferences for terminal I/O</string>
+        <string name="ubuntux_terminal_io_preferences_title">Terminal I/O</string>
+        <string name="ubuntux_terminal_io_preferences_summary">Preferences for terminal I/O</string>
 
             <!-- Keyboard Category -->
-            <string name="termux_keyboard_header">Keyboard</string>
+            <string name="ubuntux_keyboard_header">Keyboard</string>
 
                 <!-- Soft Keyboard -->
-                <string name="termux_soft_keyboard_enabled_title">Soft Keyboard Enabled</string>
-                <string name="termux_soft_keyboard_enabled_off">Soft keyboard will be disabled.</string>
-                <string name="termux_soft_keyboard_enabled_on">Soft keyboard will be enabled. (Default)</string>
+                <string name="ubuntux_soft_keyboard_enabled_title">Soft Keyboard Enabled</string>
+                <string name="ubuntux_soft_keyboard_enabled_off">Soft keyboard will be disabled.</string>
+                <string name="ubuntux_soft_keyboard_enabled_on">Soft keyboard will be enabled. (Default)</string>
 
                 <!-- Soft Keyboard Only If No Hardware-->
-                <string name="termux_soft_keyboard_enabled_only_if_no_hardware_title">Soft Keyboard Only If No Hardware</string>
-                <string name="termux_soft_keyboard_enabled_only_if_no_hardware_off">Soft keyboard will be enabled even if
+                <string name="ubuntux_soft_keyboard_enabled_only_if_no_hardware_title">Soft Keyboard Only If No Hardware</string>
+                <string name="ubuntux_soft_keyboard_enabled_only_if_no_hardware_off">Soft keyboard will be enabled even if
                     hardware keyboard is connected. (Default)</string>
-                <string name="termux_soft_keyboard_enabled_only_if_no_hardware_on">Soft keyboard will be enabled only if
+                <string name="ubuntux_soft_keyboard_enabled_only_if_no_hardware_on">Soft keyboard will be enabled only if
                     no hardware keyboard is connected.</string>
 
 
         <!-- Terminal View Preferences -->
-        <string name="termux_terminal_view_preferences_title">Terminal View</string>
-        <string name="termux_terminal_view_preferences_summary">Preferences for terminal view</string>
+        <string name="ubuntux_terminal_view_preferences_title">Terminal View</string>
+        <string name="ubuntux_terminal_view_preferences_summary">Preferences for terminal view</string>
 
             <!-- View Category -->
-            <string name="termux_terminal_view_view_header">View</string>
+            <string name="ubuntux_terminal_view_view_header">View</string>
 
                 <!-- Terminal View Margin Adjustment -->
-                <string name="termux_terminal_view_terminal_margin_adjustment_title">Terminal Margin Adjustment</string>
-                <string name="termux_terminal_view_terminal_margin_adjustment_off">Terminal margin adjustment will be disabled.</string>
-                <string name="termux_terminal_view_terminal_margin_adjustment_on">Terminal margin adjustment will be enabled.
+                <string name="ubuntux_terminal_view_terminal_margin_adjustment_title">Terminal Margin Adjustment</string>
+                <string name="ubuntux_terminal_view_terminal_margin_adjustment_off">Terminal margin adjustment will be disabled.</string>
+                <string name="ubuntux_terminal_view_terminal_margin_adjustment_on">Terminal margin adjustment will be enabled.
                     It should be enabled to try to fix the issue where soft keyboard covers part of extra keys/terminal view.
                     If it causes screen flickering on your devices, then disable it. (Default)</string>
 
 
 
         <!-- Ubuntux:API App Preferences -->
-    <string name="termux_api_preferences_title">&TERMUX_API_APP_NAME;</string>
-    <string name="termux_api_preferences_summary">Preferences for &TERMUX_API_APP_NAME; app</string>
+    <string name="ubuntux_api_preferences_title">&UBUNTUX_API_APP_NAME;</string>
+    <string name="ubuntux_api_preferences_summary">Preferences for &UBUNTUX_API_APP_NAME; app</string>
 
 
 
     <!-- Ubuntux:Float App Preferences -->
-    <string name="termux_float_preferences_title">&TERMUX_FLOAT_APP_NAME;</string>
-    <string name="termux_float_preferences_summary">Preferences for &TERMUX_FLOAT_APP_NAME; app</string>
+    <string name="ubuntux_float_preferences_title">&UBUNTUX_FLOAT_APP_NAME;</string>
+    <string name="ubuntux_float_preferences_summary">Preferences for &UBUNTUX_FLOAT_APP_NAME; app</string>
 
 
 
     <!-- Ubuntux:Tasker App Preferences -->
-    <string name="termux_tasker_preferences_title">&TERMUX_TASKER_APP_NAME;</string>
-    <string name="termux_tasker_preferences_summary">Preferences for &TERMUX_TASKER_APP_NAME; app</string>
+    <string name="ubuntux_tasker_preferences_title">&UBUNTUX_TASKER_APP_NAME;</string>
+    <string name="ubuntux_tasker_preferences_summary">Preferences for &UBUNTUX_TASKER_APP_NAME; app</string>
 
 
 
     <!-- Ubuntux:Widget App Preferences -->
-    <string name="termux_widget_preferences_title">&TERMUX_WIDGET_APP_NAME;</string>
-    <string name="termux_widget_preferences_summary">Preferences for &TERMUX_WIDGET_APP_NAME; app</string>
+    <string name="ubuntux_widget_preferences_title">&UBUNTUX_WIDGET_APP_NAME;</string>
+    <string name="ubuntux_widget_preferences_summary">Preferences for &UBUNTUX_WIDGET_APP_NAME; app</string>
 
 
 

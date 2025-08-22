@@ -177,7 +177,7 @@ public class ExecutionCommand {
 
     /**
      * The {@link ExecutionCommand} custom log level for background {@link AppShell}
-     * commands. By default, @link com.termux.shared.shell.StreamGobbler} only logs stdout and
+     * commands. By default, @link com.ubuntux.shared.shell.StreamGobbler} only logs stdout and
      * stderr if {@link Logger} `CURRENT_LOG_LEVEL` is >= {@link Logger#LOG_LEVEL_VERBOSE} and
      * {@link AppShell} only logs stdin if `CURRENT_LOG_LEVEL` is >=
      * {@link Logger#LOG_LEVEL_DEBUG}.

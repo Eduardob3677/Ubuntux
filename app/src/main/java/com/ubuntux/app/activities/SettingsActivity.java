@@ -16,13 +16,13 @@ import com.ubuntux.shared.models.ReportInfo;
 import com.ubuntux.app.models.UserAction;
 import com.ubuntux.shared.interact.ShareUtils;
 import com.ubuntux.shared.android.PackageUtils;
-import com.ubuntux.shared.termux.settings.preferences.TermuxAPIAppSharedPreferences;
-import com.ubuntux.shared.termux.settings.preferences.TermuxFloatAppSharedPreferences;
-import com.ubuntux.shared.termux.settings.preferences.TermuxTaskerAppSharedPreferences;
-import com.ubuntux.shared.termux.settings.preferences.TermuxWidgetAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxAPIAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxFloatAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxTaskerAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxWidgetAppSharedPreferences;
 import com.ubuntux.shared.android.AndroidUtils;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.TermuxUtils;
+import com.ubuntux.shared.ubuntux.UbuntuxConstants;
+import com.ubuntux.shared.ubuntux.UbuntuxUtils;
 import com.ubuntux.shared.activity.media.AppCompatActivityUtils;
 import com.ubuntux.shared.theme.NightMode;
 
@@ -74,36 +74,36 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void configureTermuxAPIPreference(@NonNull Context context) {
-            Preference termuxAPIPreference = findPreference("termux_api");
+            Preference termuxAPIPreference = findPreference("ubuntux_api");
             if (termuxAPIPreference != null) {
-                TermuxAPIAppSharedPreferences preferences = TermuxAPIAppSharedPreferences.build(context, false);
+                UbuntuxAPIAppSharedPreferences preferences = UbuntuxAPIAppSharedPreferences.build(context, false);
                 // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxAPIPreference.setVisible(preferences != null);
             }
         }
 
         private void configureTermuxFloatPreference(@NonNull Context context) {
-            Preference termuxFloatPreference = findPreference("termux_float");
+            Preference termuxFloatPreference = findPreference("ubuntux_float");
             if (termuxFloatPreference != null) {
-                TermuxFloatAppSharedPreferences preferences = TermuxFloatAppSharedPreferences.build(context, false);
+                UbuntuxFloatAppSharedPreferences preferences = UbuntuxFloatAppSharedPreferences.build(context, false);
                 // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxFloatPreference.setVisible(preferences != null);
             }
         }
 
         private void configureTermuxTaskerPreference(@NonNull Context context) {
-            Preference termuxTaskerPreference = findPreference("termux_tasker");
+            Preference termuxTaskerPreference = findPreference("ubuntux_tasker");
             if (termuxTaskerPreference != null) {
-                TermuxTaskerAppSharedPreferences preferences = TermuxTaskerAppSharedPreferences.build(context, false);
+                UbuntuxTaskerAppSharedPreferences preferences = UbuntuxTaskerAppSharedPreferences.build(context, false);
                 // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxTaskerPreference.setVisible(preferences != null);
             }
         }
 
         private void configureTermuxWidgetPreference(@NonNull Context context) {
-            Preference termuxWidgetPreference = findPreference("termux_widget");
+            Preference termuxWidgetPreference = findPreference("ubuntux_widget");
             if (termuxWidgetPreference != null) {
-                TermuxWidgetAppSharedPreferences preferences = TermuxWidgetAppSharedPreferences.build(context, false);
+                UbuntuxWidgetAppSharedPreferences preferences = UbuntuxWidgetAppSharedPreferences.build(context, false);
                 // If failed to get app preferences, then likely app is not installed, so do not show its preference
                 termuxWidgetPreference.setVisible(preferences != null);
             }
@@ -119,18 +119,18 @@ public class SettingsActivity extends AppCompatActivity {
                             String title = "About";
 
                             StringBuilder aboutString = new StringBuilder();
-                            aboutString.append(TermuxUtils.getAppInfoMarkdownString(context, TermuxUtils.AppInfoMode.TERMUX_AND_PLUGIN_PACKAGES));
+                            aboutString.append(UbuntuxUtils.getAppInfoMarkdownString(context, UbuntuxUtils.AppInfoMode.UBUNTUX_AND_PLUGIN_PACKAGES));
                             aboutString.append("\n\n").append(AndroidUtils.getDeviceInfoMarkdownString(context, true));
-                            aboutString.append("\n\n").append(TermuxUtils.getImportantLinksMarkdownString(context));
+                            aboutString.append("\n\n").append(UbuntuxUtils.getImportantLinksMarkdownString(context));
 
                             String userActionName = UserAction.ABOUT.getName();
 
                             ReportInfo reportInfo = new ReportInfo(userActionName,
-                                TermuxConstants.TERMUX_APP.TERMUX_SETTINGS_ACTIVITY_NAME, title);
+                                UbuntuxConstants.UBUNTUX_APP.UBUNTUX_SETTINGS_ACTIVITY_NAME, title);
                             reportInfo.setReportString(aboutString.toString());
                             reportInfo.setReportSaveFileLabelAndPath(userActionName,
                                 Environment.getExternalStorageDirectory() + "/" +
-                                    FileUtils.sanitizeFileName(TermuxConstants.TERMUX_APP_NAME + "-" + userActionName + ".log", true, true));
+                                    FileUtils.sanitizeFileName(UbuntuxConstants.UBUNTUX_APP_NAME + "-" + userActionName + ".log", true, true));
 
                             ReportActivity.startReportActivity(context, reportInfo);
                         }
@@ -149,8 +149,8 @@ public class SettingsActivity extends AppCompatActivity {
                     // If APK is a Google Playstore release, then do not show the donation link
                     // since Termux isn't exempted from the playstore policy donation links restriction
                     // Check Fund solicitations: https://pay.google.com/intl/en_in/about/policy/
-                    String apkRelease = TermuxUtils.getAPKRelease(signingCertificateSHA256Digest);
-                    if (apkRelease == null || apkRelease.equals(TermuxConstants.APK_RELEASE_GOOGLE_PLAYSTORE_SIGNING_CERTIFICATE_SHA256_DIGEST)) {
+                    String apkRelease = UbuntuxUtils.getAPKRelease(signingCertificateSHA256Digest);
+                    if (apkRelease == null || apkRelease.equals(UbuntuxConstants.APK_RELEASE_GOOGLE_PLAYSTORE_SIGNING_CERTIFICATE_SHA256_DIGEST)) {
                         donatePreference.setVisible(false);
                         return;
                     } else {
@@ -159,7 +159,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
                 donatePreference.setOnPreferenceClickListener(preference -> {
-                    ShareUtils.openUrl(context, TermuxConstants.TERMUX_DONATE_URL);
+                    ShareUtils.openUrl(context, UbuntuxConstants.UBUNTUX_DONATE_URL);
                     return true;
                 });
             }
