@@ -112,7 +112,7 @@ static int create_subprocess(JNIEnv* env,
     }
 }
 
-JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_createSubprocess(
+JNIEXPORT jint JNICALL Java_com_ubuntux_terminal_JNI_createSubprocess(
         JNIEnv* env,
         jclass UBUNTUX_UNUSED(clazz),
         jstring cmd,
@@ -178,23 +178,13 @@ JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_createSubprocess(
     return ptm;
 }
 
-JNIEXPORT void JNICALL Java_com_termux_terminal_JNI_setPtyWindowSize(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint fd, jint rows, jint cols)
+JNIEXPORT void JNICALL Java_com_ubuntux_terminal_JNI_setPtyWindowSize(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint fd, jint rows, jint cols)
 {
     struct winsize sz = { .ws_row = (unsigned short) rows, .ws_col = (unsigned short) cols };
     ioctl(fd, TIOCSWINSZ, &sz);
 }
 
-JNIEXPORT void JNICALL Java_com_termux_terminal_JNI_setPtyUTF8Mode(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint fd)
-{
-    struct termios tios;
-    tcgetattr(fd, &tios);
-    if ((tios.c_iflag & IUTF8) == 0) {
-        tios.c_iflag |= IUTF8;
-        tcsetattr(fd, TCSANOW, &tios);
-    }
-}
-
-JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_waitFor(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint pid)
+JNIEXPORT jint JNICALL Java_com_ubuntux_terminal_JNI_waitFor(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint pid)
 {
     int status;
     waitpid(pid, &status, 0);
@@ -208,7 +198,7 @@ JNIEXPORT jint JNICALL Java_com_termux_terminal_JNI_waitFor(JNIEnv* UBUNTUX_UNUS
     }
 }
 
-JNIEXPORT void JNICALL Java_com_termux_terminal_JNI_close(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint fileDescriptor)
+JNIEXPORT void JNICALL Java_com_ubuntux_terminal_JNI_close(JNIEnv* UBUNTUX_UNUSED(env), jclass UBUNTUX_UNUSED(clazz), jint fileDescriptor)
 {
     close(fileDescriptor);
 }
