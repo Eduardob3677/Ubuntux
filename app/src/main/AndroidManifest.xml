@@ -51,13 +51,13 @@
         tools:targetApi="m">
 
         <activity
-            android:name=".app.TermuxActivity"
+            android:name=".app.UbuntuxActivity"
             android:exported="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|density|screenLayout|keyboard|keyboardHidden|navigation"
             android:label="@string/application_name"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:theme="@style/Theme.TermuxActivity.DayNight.NoActionBar"
+            android:theme="@style/Theme.UbuntuxActivity.DayNight.NoActionBar"
             tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,7 +78,7 @@
         <activity-alias
             android:name=".HomeActivity"
             android:exported="true"
-            android:targetActivity=".app.TermuxActivity">
+            android:targetActivity=".app.UbuntuxActivity">
 
             <!-- Launch activity automatically on boot on Android Things devices -->
             <intent-filter>
@@ -93,7 +93,7 @@
             android:name=".app.activities.HelpActivity"
             android:exported="false"
             android:label="@string/application_name"
-            android:parentActivityName=".app.TermuxActivity"
+            android:parentActivityName=".app.UbuntuxActivity"
             android:resizeableActivity="true"
             tools:targetApi="n" />
 

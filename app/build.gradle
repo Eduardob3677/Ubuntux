@@ -34,7 +34,7 @@ android {
         implementation "io.noties.markwon:recycler:$markwonVersion"
 
         implementation project(":terminal-view")
-        implementation project(":termux-shared")
+        implementation project(":ubuntux-shared")
     }
 
     defaultConfig {

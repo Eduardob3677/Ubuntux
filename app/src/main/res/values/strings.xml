@@ -102,10 +102,10 @@
     <string name="error_display_over_other_apps_permission_not_granted_to_start_terminal">&TERMUX_APP_NAME; requires
         \"Display over other apps\" permission to start terminal sessions from background on Android >= 10.
         Grants it from Settings -> Apps -> &TERMUX_APP_NAME; -> Advanced</string>
-    <string name="error_termux_service_invalid_execution_command_runner">Invalid execution command runner to UbuntuxService: `%1$s`</string>
-    <string name="error_termux_service_unsupported_execution_command_runner">Unsupported execution command runner to UbuntuxService: `%1$s`</string>
-    <string name="error_termux_service_unsupported_execution_command_shell_create_mode">Unsupported execution command shell create mode to UbuntuxService: `%1$s`</string>
-    <string name="error_termux_service_execution_command_shell_name_unset">Shell name not set but `%1$s` shell create mode passed</string>
+    <string name="error_ubuntux_service_invalid_execution_command_runner">Invalid execution command runner to UbuntuxService: `%1$s`</string>
+    <string name="error_ubuntux_service_unsupported_execution_command_runner">Unsupported execution command runner to UbuntuxService: `%1$s`</string>
+    <string name="error_ubuntux_service_unsupported_execution_command_shell_create_mode">Unsupported execution command shell create mode to UbuntuxService: `%1$s`</string>
+    <string name="error_ubuntux_service_execution_command_shell_name_unset">Shell name not set but `%1$s` shell create mode passed</string>
 
 
 
@@ -125,13 +125,13 @@
 
 
     <!-- Miscellaneous -->
-    <string name="error_termux_service_start_failed_general">Failed to start UbuntuxService. Check logcat for exception message.</string>
-    <string name="error_termux_service_start_failed_bg">Failed to start UbuntuxService while app is in background due to android bg restrictions.</string>
+    <string name="error_ubuntux_service_start_failed_general">Failed to start UbuntuxService. Check logcat for exception message.</string>
+    <string name="error_ubuntux_service_start_failed_bg">Failed to start UbuntuxService while app is in background due to android bg restrictions.</string>
 
 
 
     <!-- Ubuntux Settings -->
-    <string name="title_activity_termux_settings">&TERMUX_APP_NAME; Settings</string>
+    <string name="title_activity_ubuntux_settings">&TERMUX_APP_NAME; Settings</string>
 
     <!-- Ubuntux App Preferences -->
     <string name="termux_preferences_title">&TERMUX_APP_NAME;</string>
