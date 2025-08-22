@@ -48,6 +48,7 @@ jobs:
           TERMUX_PACKAGE_VARIANT: ${{ matrix.package_variant }}
         run: |
           echo "Building debug APK with package variant: ${{ matrix.package_variant }}"
+          echo "Using debug signing configuration with testkey_untrusted.jks"
           ./gradlew assembleDebug --stacktrace
 
       - name: Verify debug APK signature
