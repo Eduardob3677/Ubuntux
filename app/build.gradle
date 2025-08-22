@@ -199,10 +199,10 @@ def downloadBootstrap(String arch, String expectedChecksum, String version) {
 def downloadUbuntuRootfs(String version) {
     // Download actual Ubuntu Noble rootfs from proot-distro for the required architectures
     def architectureMap = [
-        "aarch64": "ubuntu-noble-aarch64-pd-v4.17.3.tar.xz",
-        "arm": "ubuntu-noble-arm-pd-v4.17.3.tar.xz", 
-        "x86_64": "ubuntu-noble-x86_64-pd-v4.17.3.tar.xz",
-        "i686": "ubuntu-noble-x86_64-pd-v4.17.3.tar.xz"  // Use x86_64 for i686
+        "aarch64": "ubuntu-noble-aarch64-pd-v4.18.0.tar.xz",
+        "arm": "ubuntu-noble-arm-pd-v4.18.0.tar.xz", 
+        "x86_64": "ubuntu-noble-x86_64-pd-v4.18.0.tar.xz",
+        "i686": "ubuntu-noble-x86_64-pd-v4.18.0.tar.xz"  // Use x86_64 for i686
     ]
     
     architectureMap.each { arch, filename ->
@@ -217,7 +217,7 @@ def downloadUbuntuRootfs(String version) {
         }
         
         logger.quiet("Downloading Ubuntu Noble rootfs for " + arch + " from proot-distro...")
-        def remoteUrl = "https://github.com/termux/proot-distro/releases/download/v4.17.3/" + filename
+        def remoteUrl = "https://github.com/termux/proot-distro/releases/download/v4.18.0/" + filename
         
         // Download the tar.xz file if it doesn't exist
         if (!tarFile.exists()) {
