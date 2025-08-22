@@ -207,7 +207,9 @@ final class TermuxInstaller {
                     if (symlinks.isEmpty())
                         throw new RuntimeException("No SYMLINKS.txt encountered");
                     for (Pair<String, String> symlink : symlinks) {
-                        Error symlinkError = FileUtils.createSymlinkFile("bootstrap symlink ", symlink.first, symlink.second);
+                        // Use explicit parameters to allow overwriting any file type during bootstrap
+                        // allowDangling=true, overwrite=true, overwriteOnlyIfDestIsASymlink=false
+                        Error symlinkError = FileUtils.createSymlinkFile("bootstrap symlink ", symlink.first, symlink.second, true, true, false);
                         if (symlinkError != null) {
                             throw new RuntimeException("Failed to create symlink from \"" + symlink.first + "\" to \"" + symlink.second + "\": " + symlinkError.toString());
                         }
