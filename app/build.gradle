@@ -274,11 +274,9 @@ def addZipEntry(zipOutput, String name, boolean isDirectory) {
     
     if (!isDirectory) {
         if (name == "SYMLINKS.txt") {
-            // Add minimal symlinks content for Ubuntu
-            def symlinks = """
-sh←bin/bash
-bash←bin/bash
-""".trim()
+            // Add symlinks content for Ubuntu - format is: target←linkname
+            def symlinks = """sh←bin/bash
+bash←bin/bash""".trim()
             zipOutput.write(symlinks.getBytes())
         } else if (name.startsWith("bin/") || name.startsWith("usr/bin/")) {
             // Add minimal binary content (this will be replaced with actual binaries)
