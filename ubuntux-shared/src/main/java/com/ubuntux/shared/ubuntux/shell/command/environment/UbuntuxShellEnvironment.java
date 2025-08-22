@@ -44,6 +44,11 @@ public class UbuntuxShellEnvironment extends AndroidShellEnvironment {
         HashMap<String, String> environmentMap = new UbuntuxShellEnvironment().getEnvironment(currentPackageContext, false);
         String environmentString = ShellEnvironmentUtils.convertEnvironmentToDotEnvFile(environmentMap);
 
+        Logger.logInfo(LOG_TAG, "Writing environment to file with " + environmentMap.size() + " variables");
+        Logger.logDebug(LOG_TAG, "PATH variable: " + environmentMap.get("PATH"));
+        Logger.logDebug(LOG_TAG, "PREFIX variable: " + environmentMap.get("PREFIX"));
+        Logger.logDebug(LOG_TAG, "HOME variable: " + environmentMap.get("HOME"));
+
         // Write environment string to temp file and then move to final location since otherwise
         // writing may happen while file is being sourced/read
         Error error = FileUtils.writeTextToFile("termux.env.tmp", UbuntuxConstants.UBUNTUX_ENV_TEMP_FILE_PATH,
@@ -56,6 +61,8 @@ public class UbuntuxShellEnvironment extends AndroidShellEnvironment {
         error = FileUtils.moveRegularFile("termux.env.tmp", UbuntuxConstants.UBUNTUX_ENV_TEMP_FILE_PATH, UbuntuxConstants.UBUNTUX_ENV_FILE_PATH, true);
         if (error != null) {
             Logger.logErrorExtended(LOG_TAG, error.toString());
+        } else {
+            Logger.logInfo(LOG_TAG, "Environment file written successfully to " + UbuntuxConstants.UBUNTUX_ENV_FILE_PATH);
         }
     }
 

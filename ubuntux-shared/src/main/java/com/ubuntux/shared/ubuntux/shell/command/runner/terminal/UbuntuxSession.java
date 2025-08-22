@@ -166,6 +166,12 @@ public class UbuntuxSession {
         }
 
         Logger.logDebugExtended(LOG_TAG, executionCommand.toString());
+        
+        // Log the shell environment for debugging
+        Logger.logInfo(LOG_TAG, "Creating session with executable: " + executionCommand.executable);
+        Logger.logInfo(LOG_TAG, "Working directory: " + executionCommand.workingDirectory);
+        Logger.logInfo(LOG_TAG, "Is failsafe: " + executionCommand.isFailsafe);
+        
         Logger.logVerboseExtended(LOG_TAG, "\"" + executionCommand.getCommandIdAndLabelLogString() + "\" UbuntuxSession Environment:\n" +
             Joiner.on("\n").join(environmentArray));
 
