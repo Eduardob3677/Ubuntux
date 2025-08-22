@@ -217,6 +217,9 @@ final class UbuntuxInstaller {
 
                     // Recreate env file since termux prefix was wiped earlier
                     UbuntuxShellEnvironment.writeEnvironmentToFile(activity);
+                    
+                    // Copy diagnostic scripts to user home directory for easy access
+                    copyDiagnosticScripts(activity);
 
                     activity.runOnUiThread(whenDone);
 
@@ -654,6 +657,46 @@ final class UbuntuxInstaller {
         // Only load the shared library when necessary to save memory usage.
         System.loadLibrary("ubuntux-bootstrap");
         return getZip();
+    }
+
+    /**
+     * Copy diagnostic scripts from assets to user home directory for easy troubleshooting.
+     */
+    private static void copyDiagnosticScripts(Context context) {
+        try {
+            // Copy diagnostic script
+            copyAssetToFile(context, "ubuntux-diagnostics.sh", 
+                          UbuntuxConstants.UBUNTUX_HOME_DIR_PATH + "/ubuntux-diagnostics.sh");
+            
+            // Copy test script
+            copyAssetToFile(context, "test-ubuntu.sh", 
+                          UbuntuxConstants.UBUNTUX_HOME_DIR_PATH + "/test-ubuntu.sh");
+            
+            Logger.logInfo(LOG_TAG, "Diagnostic scripts copied to user home directory");
+        } catch (Exception e) {
+            Logger.logError(LOG_TAG, "Failed to copy diagnostic scripts: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Copy an asset file to a destination path and make it executable.
+     */
+    private static void copyAssetToFile(Context context, String assetName, String destPath) throws Exception {
+        try (InputStream inputStream = context.getAssets().open(assetName);
+             FileOutputStream outputStream = new FileOutputStream(destPath)) {
+            
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+        
+        // Make the script executable
+        File scriptFile = new File(destPath);
+        scriptFile.setExecutable(true, false);
+        
+        Logger.logDebug(LOG_TAG, "Copied and made executable: " + destPath);
     }
 
     public static native byte[] getZip();
