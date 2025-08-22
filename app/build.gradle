@@ -8,8 +8,8 @@ ext {
     // crash at startup.
     // Bootstrap of a different variant must not be manually installed by the user after app installation
     // by replacing $PREFIX since app code is dependant on the variant used to build the APK.
-    // Currently supported values are: [ "apt-android-7" "apt-android-5" ]
-    packageVariant = System.getenv("TERMUX_PACKAGE_VARIANT") ?: "apt-android-7" // Default: "apt-android-7"
+    // Currently supported values are: [ "ubuntu-22.04" "ubuntu-20.04" ]
+    packageVariant = System.getenv("TERMUX_PACKAGE_VARIANT") ?: "ubuntu-22.04" // Default: "ubuntu-22.04"
 }
 
 android {
@@ -34,11 +34,11 @@ android {
         implementation "io.noties.markwon:recycler:$markwonVersion"
 
         implementation project(":terminal-view")
-        implementation project(":termux-shared")
+        implementation project(":ubuntux-shared")
     }
 
     defaultConfig {
-        applicationId "com.termux"
+        applicationId "com.ubuntux"
         minSdkVersion project.properties.minSdkVersion.toInteger()
         targetSdkVersion project.properties.targetSdkVersion.toInteger()
         versionCode 118
@@ -49,14 +49,14 @@ android {
 
         buildConfigField "String", "TERMUX_PACKAGE_VARIANT", "\"" + project.ext.packageVariant + "\"" // Used by TermuxApplication class
 
-        manifestPlaceholders.TERMUX_PACKAGE_NAME = "com.termux"
-        manifestPlaceholders.TERMUX_APP_NAME = "Termux"
-        manifestPlaceholders.TERMUX_API_APP_NAME = "Termux:API"
-        manifestPlaceholders.TERMUX_BOOT_APP_NAME = "Termux:Boot"
-        manifestPlaceholders.TERMUX_FLOAT_APP_NAME = "Termux:Float"
-        manifestPlaceholders.TERMUX_STYLING_APP_NAME = "Termux:Styling"
-        manifestPlaceholders.TERMUX_TASKER_APP_NAME = "Termux:Tasker"
-        manifestPlaceholders.TERMUX_WIDGET_APP_NAME = "Termux:Widget"
+        manifestPlaceholders.TERMUX_PACKAGE_NAME = "com.ubuntux"
+        manifestPlaceholders.TERMUX_APP_NAME = "Ubuntux"
+        manifestPlaceholders.TERMUX_API_APP_NAME = "Ubuntux:API"
+        manifestPlaceholders.TERMUX_BOOT_APP_NAME = "Ubuntux:Boot"
+        manifestPlaceholders.TERMUX_FLOAT_APP_NAME = "Ubuntux:Float"
+        manifestPlaceholders.TERMUX_STYLING_APP_NAME = "Ubuntux:Styling"
+        manifestPlaceholders.TERMUX_TASKER_APP_NAME = "Ubuntux:Tasker"
+        manifestPlaceholders.TERMUX_WIDGET_APP_NAME = "Ubuntux:Widget"
 
         externalNativeBuild {
             ndkBuild {
@@ -130,10 +130,10 @@ android {
         variant.outputs.all { output ->
             if (variant.buildType.name == "debug") {
                 def abi = output.getFilter(com.android.build.OutputFile.ABI)
-                outputFileName = new File("termux-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "debug") + "_" + (abi ? abi : "universal") + ".apk")
+                outputFileName = new File("ubuntux-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "debug") + "_" + (abi ? abi : "universal") + ".apk")
             } else if (variant.buildType.name == "release") {
                 def abi = output.getFilter(com.android.build.OutputFile.ABI)
-                outputFileName = new File("termux-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "release") + "_" + (abi ? abi : "universal") + ".apk")
+                outputFileName = new File("ubuntux-app_" + (apkVersionTag ? apkVersionTag : project.ext.packageVariant + "-" + "release") + "_" + (abi ? abi : "universal") + ".apk")
             }
         }
     }
@@ -202,6 +202,91 @@ def downloadBootstrap(String arch, String expectedChecksum, String version) {
     }
 }
 
+def createUbuntuBootstrap(String version) {
+    // For now, create minimal Ubuntu rootfs structure for each architecture
+    // This will be replaced with actual Ubuntu rootfs setup
+    def architectures = ["aarch64", "arm", "i686", "x86_64"]
+    
+    architectures.each { arch ->
+        def localUrl = "src/main/cpp/bootstrap-" + arch + ".zip"
+        def file = new File(projectDir, localUrl)
+        
+        if (file.exists()) {
+            logger.quiet("Ubuntu bootstrap for " + arch + " already exists")
+            return
+        }
+        
+        logger.quiet("Creating Ubuntu " + version + " bootstrap for " + arch)
+        file.parentFile.mkdirs()
+        
+        // Create a Ubuntu rootfs ZIP structure that matches what TermuxInstaller expects
+        def zipOutput = new java.util.zip.ZipOutputStream(new FileOutputStream(file))
+        
+        // Add Ubuntu directory structure
+        addZipEntry(zipOutput, "bin/", true)
+        addZipEntry(zipOutput, "boot/", true)
+        addZipEntry(zipOutput, "dev/", true)
+        addZipEntry(zipOutput, "etc/", true)
+        addZipEntry(zipOutput, "home/", true)
+        addZipEntry(zipOutput, "lib/", true)
+        addZipEntry(zipOutput, "media/", true)
+        addZipEntry(zipOutput, "mnt/", true)
+        addZipEntry(zipOutput, "opt/", true)
+        addZipEntry(zipOutput, "proc/", true)
+        addZipEntry(zipOutput, "root/", true)
+        addZipEntry(zipOutput, "run/", true)
+        addZipEntry(zipOutput, "sbin/", true)
+        addZipEntry(zipOutput, "srv/", true)
+        addZipEntry(zipOutput, "sys/", true)
+        addZipEntry(zipOutput, "tmp/", true)
+        addZipEntry(zipOutput, "usr/", true)
+        addZipEntry(zipOutput, "usr/bin/", true)
+        addZipEntry(zipOutput, "usr/lib/", true)
+        addZipEntry(zipOutput, "usr/local/", true)
+        addZipEntry(zipOutput, "usr/share/", true)
+        addZipEntry(zipOutput, "var/", true)
+        addZipEntry(zipOutput, "var/lib/", true)
+        addZipEntry(zipOutput, "var/log/", true)
+        
+        // Add essential Ubuntu binaries
+        addZipEntry(zipOutput, "bin/bash", false)
+        addZipEntry(zipOutput, "bin/sh", false)
+        addZipEntry(zipOutput, "usr/bin/apt", false)
+        addZipEntry(zipOutput, "usr/bin/dpkg", false)
+        
+        // Add SYMLINKS.txt file that TermuxInstaller expects
+        addZipEntry(zipOutput, "SYMLINKS.txt", false)
+        
+        zipOutput.close()
+        logger.quiet("Created Ubuntu " + version + " bootstrap: " + file.absolutePath)
+    }
+}
+
+def addZipEntry(zipOutput, String name, boolean isDirectory) {
+    def entry = new java.util.zip.ZipEntry(name + (isDirectory ? "/" : ""))
+    if (isDirectory) {
+        entry.setMethod(java.util.zip.ZipEntry.STORED)
+        entry.setSize(0)
+        entry.setCompressedSize(0)
+        entry.setCrc(0)
+    }
+    zipOutput.putNextEntry(entry)
+    
+    if (!isDirectory) {
+        if (name == "SYMLINKS.txt") {
+            // Add symlinks content for Ubuntu - format is: target←linkname
+            def symlinks = """sh←bin/bash
+bash←bin/bash""".trim()
+            zipOutput.write(symlinks.getBytes())
+        } else if (name.startsWith("bin/") || name.startsWith("usr/bin/")) {
+            // Add minimal binary content (this will be replaced with actual binaries)
+            zipOutput.write(("#!/bin/bash\necho 'Ubuntu " + name + "'\n").getBytes())
+        }
+    }
+    
+    zipOutput.closeEntry()
+}
+
 clean {
     doLast {
         def tree = fileTree(new File(projectDir, 'src/main/cpp'))
@@ -213,18 +298,15 @@ clean {
 task downloadBootstraps() {
     doLast {
         def packageVariant = project.ext.packageVariant
-        if (packageVariant == "apt-android-7") {
-            def version = "2022.04.28-r5" + "+" + packageVariant
-            downloadBootstrap("aarch64", "4a51a7eb209fe82efc24d52e3cccc13165f27377290687cb82038cbd8e948430", version)
-            downloadBootstrap("arm", "6459a786acbae50d4c8a36fa1c3de6a4dd2d482572f6d54f73274709bd627325", version)
-            downloadBootstrap("i686", "919d212b2f19e08600938db4079e794e947365022dbfd50ac342c50fcedcd7be", version)
-            downloadBootstrap("x86_64", "61b02fdc03ea4f5d9da8d8cf018013fdc6659e6da6cbf44e9b24d1c623580b89", version)
-        } else if (packageVariant == "apt-android-5") {
-            def version = "2022.04.28-r6" + "+" + packageVariant
-            downloadBootstrap("aarch64", "913609d439415c828c5640be1b0561467e539cb1c7080662decaaca2fb4820e7", version)
-            downloadBootstrap("arm", "26bfb45304c946170db69108e5eb6e3641aad751406ce106c80df80cad2eccf8", version)
-            downloadBootstrap("i686", "46dcfeb5eef67ba765498db9fe4c50dc4690805139aa0dd141a9d8ee0693cd27", version)
-            downloadBootstrap("x86_64", "615b590679ee6cd885b7fd2ff9473c845e920f9b422f790bb158c63fe42b8481", version)
+        if (packageVariant == "ubuntu-22.04") {
+            // For Ubuntu 22.04, we'll create minimal Ubuntu rootfs structure
+            // This will be replaced with actual Ubuntu rootfs in the future
+            logger.quiet("Creating Ubuntu 22.04 bootstrap structure...")
+            createUbuntuBootstrap("ubuntu-22.04")
+        } else if (packageVariant == "ubuntu-20.04") {
+            // For Ubuntu 20.04, we'll create minimal Ubuntu rootfs structure
+            logger.quiet("Creating Ubuntu 20.04 bootstrap structure...")
+            createUbuntuBootstrap("ubuntu-20.04")
         } else {
             throw new GradleException("Unsupported TERMUX_PACKAGE_VARIANT \"" + packageVariant + "\"")
         }
