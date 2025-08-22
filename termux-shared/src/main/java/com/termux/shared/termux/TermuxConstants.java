@@ -355,6 +355,11 @@ public final class TermuxConstants {
     public static final String TERMUX_FDROID_PACKAGE_URL = FDROID_PACKAGES_BASE_URL + "/" + TERMUX_PACKAGE_NAME; // Default: "https://f-droid.org/en/packages/com.ubuntux"
 
 
+    /*
+     * Legacy Termux plugin app references (deprecated for Ubuntu use)
+     * These are maintained for compatibility but not actively supported in Ubuntux
+     */
+
     /** Termux:API app name */
     public static final String TERMUX_API_APP_NAME = "Termux:API"; // Default: "Termux:API"
     /** Termux:API app package name */
@@ -785,19 +790,20 @@ public final class TermuxConstants {
 
 
     /*
-     * Termux app plugin specific paths.
+     * Legacy Termux app plugin specific paths (deprecated for Ubuntu use)
+     * These paths are maintained for compatibility but plugins are not supported in Ubuntux
      */
 
-    /** Termux app directory path to store scripts to be run at boot by Termux:Boot */
-    public static final String TERMUX_BOOT_SCRIPTS_DIR_PATH = TERMUX_DATA_HOME_DIR_PATH + "/boot"; // Default: "/data/data/com.ubuntux/files/home/.termux/boot"
-    /** Termux app directory to store scripts to be run at boot by Termux:Boot */
+    /** Legacy: Termux app directory path to store scripts to be run at boot by Termux:Boot */
+    public static final String TERMUX_BOOT_SCRIPTS_DIR_PATH = TERMUX_DATA_HOME_DIR_PATH + "/boot"; // Default: "/data/data/com.ubuntux/files/home/.ubuntux/boot"
+    /** Legacy: Termux app directory to store scripts to be run at boot by Termux:Boot */
     public static final File TERMUX_BOOT_SCRIPTS_DIR = new File(TERMUX_BOOT_SCRIPTS_DIR_PATH);
 
 
-    /** Termux app directory path to store foreground scripts that can be run by the termux launcher
+    /** Legacy: Termux app directory path to store foreground scripts that can be run by the termux launcher
      * widget provided by Termux:Widget */
     public static final String TERMUX_SHORTCUT_SCRIPTS_DIR_PATH = TERMUX_HOME_DIR_PATH + "/.shortcuts"; // Default: "/data/data/com.ubuntux/files/home/.shortcuts"
-    /** Termux app directory to store foreground scripts that can be run by the termux launcher widget provided by Termux:Widget */
+    /** Legacy: Termux app directory to store foreground scripts that can be run by the termux launcher widget provided by Termux:Widget */
     public static final File TERMUX_SHORTCUT_SCRIPTS_DIR = new File(TERMUX_SHORTCUT_SCRIPTS_DIR_PATH);
 
 
@@ -836,28 +842,28 @@ public final class TermuxConstants {
      * Termux app and plugins notification variables.
      */
 
-    /** Termux app notification channel id used by {@link TERMUX_APP.TERMUX_SERVICE} */
-    public static final String TERMUX_APP_NOTIFICATION_CHANNEL_ID = "termux_notification_channel";
-    /** Termux app notification channel name used by {@link TERMUX_APP.TERMUX_SERVICE} */
+    /** Ubuntux app notification channel id used by {@link TERMUX_APP.TERMUX_SERVICE} */
+    public static final String TERMUX_APP_NOTIFICATION_CHANNEL_ID = "ubuntux_notification_channel";
+    /** Ubuntux app notification channel name used by {@link TERMUX_APP.TERMUX_SERVICE} */
     public static final String TERMUX_APP_NOTIFICATION_CHANNEL_NAME = TermuxConstants.TERMUX_APP_NAME + " App";
-    /** Termux app unique notification id used by {@link TERMUX_APP.TERMUX_SERVICE} */
+    /** Ubuntux app unique notification id used by {@link TERMUX_APP.TERMUX_SERVICE} */
     public static final int TERMUX_APP_NOTIFICATION_ID = 1337;
 
-    /** Termux app notification channel id used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
-    public static final String TERMUX_RUN_COMMAND_NOTIFICATION_CHANNEL_ID = "termux_run_command_notification_channel";
-    /** Termux app notification channel name used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
+    /** Ubuntux app notification channel id used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
+    public static final String TERMUX_RUN_COMMAND_NOTIFICATION_CHANNEL_ID = "ubuntux_run_command_notification_channel";
+    /** Ubuntux app notification channel name used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
     public static final String TERMUX_RUN_COMMAND_NOTIFICATION_CHANNEL_NAME = TermuxConstants.TERMUX_APP_NAME + " RunCommandService";
-    /** Termux app unique notification id used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
+    /** Ubuntux app unique notification id used by {@link TERMUX_APP.RUN_COMMAND_SERVICE} */
     public static final int TERMUX_RUN_COMMAND_NOTIFICATION_ID = 1338;
 
-    /** Termux app notification channel id used for plugin command errors */
-    public static final String TERMUX_PLUGIN_COMMAND_ERRORS_NOTIFICATION_CHANNEL_ID = "termux_plugin_command_errors_notification_channel";
-    /** Termux app notification channel name used for plugin command errors */
+    /** Ubuntux app notification channel id used for plugin command errors */
+    public static final String TERMUX_PLUGIN_COMMAND_ERRORS_NOTIFICATION_CHANNEL_ID = "ubuntux_plugin_command_errors_notification_channel";
+    /** Ubuntux app notification channel name used for plugin command errors */
     public static final String TERMUX_PLUGIN_COMMAND_ERRORS_NOTIFICATION_CHANNEL_NAME = TermuxConstants.TERMUX_APP_NAME + " Plugin Commands Errors";
 
-    /** Termux app notification channel id used for crash reports */
-    public static final String TERMUX_CRASH_REPORTS_NOTIFICATION_CHANNEL_ID = "termux_crash_reports_notification_channel";
-    /** Termux app notification channel name used for crash reports */
+    /** Ubuntux app notification channel id used for crash reports */
+    public static final String TERMUX_CRASH_REPORTS_NOTIFICATION_CHANNEL_ID = "ubuntux_crash_reports_notification_channel";
+    /** Ubuntux app notification channel name used for crash reports */
     public static final String TERMUX_CRASH_REPORTS_NOTIFICATION_CHANNEL_NAME = TermuxConstants.TERMUX_APP_NAME + " Crash Reports";
 
 
@@ -876,21 +882,21 @@ public final class TermuxConstants {
      * Termux app and plugins miscellaneous variables.
      */
 
-    /** Android OS permission declared by Termux app in AndroidManifest.xml which can be requested by
-     * 3rd party apps to run various commands in Termux app context */
-    public static final String PERMISSION_RUN_COMMAND = TERMUX_PACKAGE_NAME + ".permission.RUN_COMMAND"; // Default: "com.termux.permission.RUN_COMMAND"
+    /** Android OS permission declared by Ubuntux app in AndroidManifest.xml which can be requested by
+     * 3rd party apps to run various commands in Ubuntux app context */
+    public static final String PERMISSION_RUN_COMMAND = TERMUX_PACKAGE_NAME + ".permission.RUN_COMMAND"; // Default: "com.ubuntux.permission.RUN_COMMAND"
 
-    /** Termux property defined in termux.properties file as a secondary check to PERMISSION_RUN_COMMAND
-     * to allow 3rd party apps to run various commands in Termux app context */
+    /** Ubuntux property defined in ubuntux.properties file as a secondary check to PERMISSION_RUN_COMMAND
+     * to allow 3rd party apps to run various commands in Ubuntux app context */
     public static final String PROP_ALLOW_EXTERNAL_APPS = "allow-external-apps"; // Default: "allow-external-apps"
     /** Default value for {@link #PROP_ALLOW_EXTERNAL_APPS} */
     public static final String PROP_DEFAULT_VALUE_ALLOW_EXTERNAL_APPS = "false"; // Default: "false"
 
-    /** The broadcast action sent when Termux App opens */
+    /** The broadcast action sent when Ubuntux App opens */
     public static final String BROADCAST_TERMUX_OPENED = TERMUX_PACKAGE_NAME + ".app.OPENED";
 
-    /** The Uri authority for Termux app file shares */
-    public static final String TERMUX_FILE_SHARE_URI_AUTHORITY = TERMUX_PACKAGE_NAME + ".files"; // Default: "com.termux.files"
+    /** The Uri authority for Ubuntux app file shares */
+    public static final String TERMUX_FILE_SHARE_URI_AUTHORITY = TERMUX_PACKAGE_NAME + ".files"; // Default: "com.ubuntux.files"
 
     /** The normal comma character (U+002C, &comma;, &#44;, comma) */
     public static final String COMMA_NORMAL = ","; // Default: ","
@@ -899,8 +905,8 @@ public final class TermuxConstants {
      * may be used instead of {@link #COMMA_NORMAL} */
     public static final String COMMA_ALTERNATIVE = "‚"; // Default: "‚"
 
-    /** Environment variable prefix root for the Termux app. */
-    public static final String TERMUX_ENV_PREFIX_ROOT = "TERMUX";
+    /** Environment variable prefix root for the Ubuntux app. */
+    public static final String TERMUX_ENV_PREFIX_ROOT = "UBUNTUX";
 
 
 
@@ -912,11 +918,11 @@ public final class TermuxConstants {
      */
     public static final class TERMUX_APP {
 
-        /** Termux apps directory path */
-        public static final String APPS_DIR_PATH = TERMUX_APPS_DIR_PATH + "/" + TERMUX_PACKAGE_NAME; // Default: "/data/data/com.ubuntux/files/apps/com.termux"
+        /** Ubuntux apps directory path */
+        public static final String APPS_DIR_PATH = TERMUX_APPS_DIR_PATH + "/" + TERMUX_PACKAGE_NAME; // Default: "/data/data/com.ubuntux/files/apps/com.ubuntux"
 
-        /** termux-am socket file path */
-        public static final String TERMUX_AM_SOCKET_FILE_PATH = APPS_DIR_PATH + "/termux-am/am.sock"; // Default: "/data/data/com.ubuntux/files/apps/com.termux/termux-am/am.sock"
+        /** ubuntux-am socket file path */
+        public static final String TERMUX_AM_SOCKET_FILE_PATH = APPS_DIR_PATH + "/ubuntux-am/am.sock"; // Default: "/data/data/com.ubuntux/files/apps/com.ubuntux/ubuntux-am/am.sock"
 
 
         /** Termux app BuildConfig class name */
