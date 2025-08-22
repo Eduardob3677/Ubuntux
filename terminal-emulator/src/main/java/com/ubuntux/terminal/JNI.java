@@ -1,12 +1,12 @@
 package com.ubuntux.terminal;
 
 /**
- * Native methods for creating and managing pseudoterminal subprocesses. C code is in jni/termux.c.
+ * Native methods for creating and managing pseudoterminal subprocesses. C code is in jni/ubuntux.c.
  */
 final class JNI {
 
     static {
-        System.loadLibrary("termux");
+        System.loadLibrary("ubuntux");
     }
 
     /**

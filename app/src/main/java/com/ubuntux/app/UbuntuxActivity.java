@@ -788,13 +788,13 @@ public final class UbuntuxActivity extends AppCompatActivity implements ServiceC
                     UbuntuxActivity.this, requestCode, !isPermissionCallback)) {
                     if (isPermissionCallback)
                         Logger.logInfoAndShowToast(UbuntuxActivity.this, LOG_TAG,
-                            getString(com.termux.shared.R.string.msg_storage_permission_granted_on_request));
+                            getString(com.ubuntux.shared.R.string.msg_storage_permission_granted_on_request));
 
                     TermuxInstaller.setupStorageSymlinks(UbuntuxActivity.this);
                 } else {
                     if (isPermissionCallback)
                         Logger.logInfoAndShowToast(UbuntuxActivity.this, LOG_TAG,
-                            getString(com.termux.shared.R.string.msg_storage_permission_not_granted_on_request));
+                            getString(com.ubuntux.shared.R.string.msg_storage_permission_not_granted_on_request));
                 }
             }
         }.start();
