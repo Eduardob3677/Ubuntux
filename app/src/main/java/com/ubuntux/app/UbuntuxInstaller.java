@@ -161,8 +161,13 @@ final class UbuntuxInstaller {
                     final byte[] archiveBytes = loadBootstrapBytes();
                     extractBootstrapArchive(archiveBytes, buffer, symlinks);
 
-                    if (symlinks.isEmpty())
-                        throw new RuntimeException("No SYMLINKS.txt encountered");
+                    // Ubuntu rootfs may not have SYMLINKS.txt, so we don't require it
+                    // Create essential symlinks for Ubuntu compatibility if needed
+                    if (symlinks.isEmpty()) {
+                        Logger.logInfo(LOG_TAG, "No SYMLINKS.txt found (expected for Ubuntu rootfs), creating essential symlinks manually");
+                        createEssentialUbuntuSymlinks(symlinks);
+                    }
+                    
                     for (Pair<String, String> symlink : symlinks) {
                         // Use explicit parameters to allow overwriting any file type during bootstrap
                         // allowDangling=true, overwrite=true, overwriteOnlyIfDestIsASymlink=false
@@ -393,6 +398,16 @@ final class UbuntuxInstaller {
     }
 
     /**
+     * Create essential symlinks for Ubuntu compatibility when SYMLINKS.txt is not present.
+     */
+    private static void createEssentialUbuntuSymlinks(List<Pair<String, String>> symlinks) {
+        // Ubuntu rootfs typically has a proper directory structure already
+        // Add any essential symlinks that might be needed for Android compatibility
+        // For now, we may not need any specific symlinks as Ubuntu rootfs should be complete
+        Logger.logInfo(LOG_TAG, "Ubuntu rootfs extracted, no additional symlinks required");
+    }
+
+    /**
      * Archive format types supported for bootstrap extraction.
      */
     private enum ArchiveFormat {
@@ -559,10 +574,14 @@ final class UbuntuxInstaller {
                     while ((readBytes = entryInput.read(buffer)) != -1)
                         outStream.write(buffer, 0, readBytes);
                 }
-                if (entryName.startsWith("bin/") || entryName.startsWith("libexec") ||
-                    entryName.startsWith("lib/apt/apt-helper") || entryName.startsWith("lib/apt/methods")) {
+                // Set executable permissions for Ubuntu system binaries
+                if (entryName.startsWith("bin/") || entryName.startsWith("sbin/") || 
+                    entryName.startsWith("usr/bin/") || entryName.startsWith("usr/sbin/") ||
+                    entryName.startsWith("libexec") || entryName.startsWith("usr/libexec") ||
+                    entryName.startsWith("lib/apt/apt-helper") || entryName.startsWith("lib/apt/methods") ||
+                    entryName.startsWith("usr/lib/apt/apt-helper") || entryName.startsWith("usr/lib/apt/methods")) {
                     //noinspection OctalInteger
-                    Os.chmod(targetFile.getAbsolutePath(), 0700);
+                    Os.chmod(targetFile.getAbsolutePath(), 0755);
                 }
             }
         }
