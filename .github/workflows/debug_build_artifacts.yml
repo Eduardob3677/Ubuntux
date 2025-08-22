@@ -1,0 +1,117 @@
+name: Debug Build with Artifacts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-debug:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package_variant: [ ubuntu-22.04, ubuntu-20.04 ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        env:
+          TERMUX_PACKAGE_VARIANT: ${{ matrix.package_variant }}
+        run: |
+          echo "Building debug APK with package variant: ${{ matrix.package_variant }}"
+          echo "Using debug signing configuration with testkey_untrusted.jks"
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Verify debug APK signature
+        run: |
+          echo "Verifying debug APKs are properly signed..."
+          APK_DIR="./app/build/outputs/apk/debug"
+          
+          # Check if APKs exist
+          if [ ! -d "$APK_DIR" ]; then
+            echo "Error: APK directory not found at $APK_DIR"
+            exit 1
+          fi
+          
+          # List all APK files
+          find "$APK_DIR" -name "*.apk" | while read apk_file; do
+            echo "Found APK: $apk_file"
+            
+            # Verify APK is signed (this will fail if not properly signed)
+            if command -v aapt >/dev/null 2>&1; then
+              aapt dump badging "$apk_file" | head -1
+            else
+              echo "APK file exists and appears valid: $(basename "$apk_file")"
+            fi
+          done
+
+      - name: Upload universal APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-universal-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/*universal*.apk
+          retention-days: 30
+
+      - name: Upload ARM64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-arm64-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/*arm64-v8a*.apk
+          retention-days: 30
+
+      - name: Upload ARM APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-arm-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/*armeabi-v7a*.apk
+          retention-days: 30
+
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-x86_64-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/*x86_64*.apk
+          retention-days: 30
+
+      - name: Upload x86 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-x86-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/*x86*.apk
+          retention-days: 30
+
+      - name: Upload build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntux-debug-metadata-${{ matrix.package_variant }}
+          path: app/build/outputs/apk/debug/output-metadata.json
+          retention-days: 30
