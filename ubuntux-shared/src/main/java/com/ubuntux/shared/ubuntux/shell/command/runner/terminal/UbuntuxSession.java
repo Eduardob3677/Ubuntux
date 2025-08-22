@@ -95,7 +95,7 @@ public class UbuntuxSession {
             if (!executionCommand.isFailsafe) {
                 for (String shellBinary : UnixShellEnvironment.LOGIN_SHELL_BINARIES) {
                     File shellFile = new File(defaultBinPath, shellBinary);
-                    if (shellFile.canExecute()) {
+                    if (shellFile.exists() && shellFile.canExecute()) {
                         executionCommand.executable = shellFile.getAbsolutePath();
                         break;
                     }
