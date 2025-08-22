@@ -527,17 +527,17 @@ public final class TermuxConstants {
      * Termux miscellaneous urls.
      */
 
-    /** Termux Site */
-    public static final String TERMUX_SITE = TERMUX_APP_NAME + " Site"; // Default: "Termux Site"
+    /** Ubuntux Site */
+    public static final String TERMUX_SITE = TERMUX_APP_NAME + " Site"; // Default: "Ubuntux Site"
 
-    /** Termux Site url */
-    public static final String TERMUX_SITE_URL = "https://termux.dev"; // Default: "https://termux.dev"
+    /** Ubuntux Site url */
+    public static final String TERMUX_SITE_URL = "https://ubuntux.dev"; // Default: "https://ubuntux.dev"
 
-    /** Termux Wiki */
-    public static final String TERMUX_WIKI = TERMUX_APP_NAME + " Wiki"; // Default: "Termux Wiki"
+    /** Ubuntux Wiki */
+    public static final String TERMUX_WIKI = TERMUX_APP_NAME + " Wiki"; // Default: "Ubuntux Wiki"
 
-    /** Termux Wiki url */
-    public static final String TERMUX_WIKI_URL = "https://wiki.termux.com"; // Default: "https://wiki.termux.com"
+    /** Ubuntux Wiki url */
+    public static final String TERMUX_WIKI_URL = "https://wiki.ubuntux.com"; // Default: "https://wiki.ubuntux.com"
 
     /** Termux GitHub wiki repo url */
     public static final String TERMUX_GITHUB_WIKI_REPO_URL = TERMUX_GITHUB_REPO_URL + "/wiki"; // Default: "https://github.com/termux/termux-app/wiki"
@@ -546,22 +546,22 @@ public final class TermuxConstants {
     public static final String TERMUX_PACKAGES_GITHUB_WIKI_REPO_URL = TERMUX_PACKAGES_GITHUB_REPO_URL + "/wiki"; // Default: "https://github.com/termux/termux-packages/wiki"
 
 
-    /** Termux support email url */
-    public static final String TERMUX_SUPPORT_EMAIL_URL = "support@termux.dev"; // Default: "support@termux.dev"
+    /** Ubuntux support email url */
+    public static final String TERMUX_SUPPORT_EMAIL_URL = "support@ubuntux.dev"; // Default: "support@ubuntux.dev"
 
-    /** Termux support email mailto url */
-    public static final String TERMUX_SUPPORT_EMAIL_MAILTO_URL = "mailto:" + TERMUX_SUPPORT_EMAIL_URL; // Default: "mailto:support@termux.dev"
-
-
-    /** Termux Reddit subreddit */
-    public static final String TERMUX_REDDIT_SUBREDDIT = "r/termux"; // Default: "r/termux"
-
-    /** Termux Reddit subreddit url */
-    public static final String TERMUX_REDDIT_SUBREDDIT_URL = "https://www.reddit.com/r/termux"; // Default: "https://www.reddit.com/r/termux"
+    /** Ubuntux support email mailto url */
+    public static final String TERMUX_SUPPORT_EMAIL_MAILTO_URL = "mailto:" + TERMUX_SUPPORT_EMAIL_URL; // Default: "mailto:support@ubuntux.dev"
 
 
-    /** Termux donate url */
-    public static final String TERMUX_DONATE_URL = TERMUX_SITE_URL + "/donate"; // Default: "https://termux.dev/donate"
+    /** Ubuntux Reddit subreddit */
+    public static final String TERMUX_REDDIT_SUBREDDIT = "r/ubuntux"; // Default: "r/ubuntux"
+
+    /** Ubuntux Reddit subreddit url */
+    public static final String TERMUX_REDDIT_SUBREDDIT_URL = "https://www.reddit.com/r/ubuntux"; // Default: "https://www.reddit.com/r/ubuntux"
+
+
+    /** Ubuntux donate url */
+    public static final String TERMUX_DONATE_URL = TERMUX_SITE_URL + "/donate"; // Default: "https://ubuntux.dev/donate"
 
 
 
@@ -717,14 +717,14 @@ public final class TermuxConstants {
 
 
 
-    /** Termux app properties primary file path */
-    public static final String TERMUX_PROPERTIES_PRIMARY_FILE_PATH = TERMUX_DATA_HOME_DIR_PATH + "/termux.properties"; // Default: "/data/data/com.ubuntux/files/home/.termux/termux.properties"
-    /** Termux app properties primary file */
+    /** Ubuntux app properties primary file path */
+    public static final String TERMUX_PROPERTIES_PRIMARY_FILE_PATH = TERMUX_DATA_HOME_DIR_PATH + "/ubuntux.properties"; // Default: "/data/data/com.ubuntux/files/home/.ubuntux/ubuntux.properties"
+    /** Ubuntux app properties primary file */
     public static final File TERMUX_PROPERTIES_PRIMARY_FILE = new File(TERMUX_PROPERTIES_PRIMARY_FILE_PATH);
 
-    /** Termux app properties secondary file path */
-    public static final String TERMUX_PROPERTIES_SECONDARY_FILE_PATH = TERMUX_CONFIG_HOME_DIR_PATH + "/termux.properties"; // Default: "/data/data/com.ubuntux/files/home/.config/termux/termux.properties"
-    /** Termux app properties secondary file */
+    /** Ubuntux app properties secondary file path */
+    public static final String TERMUX_PROPERTIES_SECONDARY_FILE_PATH = TERMUX_CONFIG_HOME_DIR_PATH + "/ubuntux.properties"; // Default: "/data/data/com.ubuntux/files/home/.config/ubuntux/ubuntux.properties"
+    /** Ubuntux app properties secondary file */
     public static final File TERMUX_PROPERTIES_SECONDARY_FILE = new File(TERMUX_PROPERTIES_SECONDARY_FILE_PATH);
 
     /** Termux app properties file paths list. **DO NOT** allow these files to be modified by
@@ -737,14 +737,14 @@ public final class TermuxConstants {
 
 
 
-    /** Termux:Float app properties primary file path */
-    public static final String TERMUX_FLOAT_PROPERTIES_PRIMARY_FILE_PATH = TERMUX_DATA_HOME_DIR_PATH + "/termux.float.properties"; // Default: "/data/data/com.ubuntux/files/home/.termux/termux.float.properties"
-    /** Termux:Float app properties primary file */
+    /** Ubuntux:Float app properties primary file path */
+    public static final String TERMUX_FLOAT_PROPERTIES_PRIMARY_FILE_PATH = TERMUX_DATA_HOME_DIR_PATH + "/ubuntux.float.properties"; // Default: "/data/data/com.ubuntux/files/home/.ubuntux/ubuntux.float.properties"
+    /** Ubuntux:Float app properties primary file */
     public static final File TERMUX_FLOAT_PROPERTIES_PRIMARY_FILE = new File(TERMUX_FLOAT_PROPERTIES_PRIMARY_FILE_PATH);
 
-    /** Termux:Float app properties secondary file path */
-    public static final String TERMUX_FLOAT_PROPERTIES_SECONDARY_FILE_PATH = TERMUX_CONFIG_HOME_DIR_PATH + "/termux.float.properties"; // Default: "/data/data/com.ubuntux/files/home/.config/termux/termux.float.properties"
-    /** Termux:Float app properties secondary file */
+    /** Ubuntux:Float app properties secondary file path */
+    public static final String TERMUX_FLOAT_PROPERTIES_SECONDARY_FILE_PATH = TERMUX_CONFIG_HOME_DIR_PATH + "/ubuntux.float.properties"; // Default: "/data/data/com.ubuntux/files/home/.config/ubuntux/ubuntux.float.properties"
+    /** Ubuntux:Float app properties secondary file */
     public static final File TERMUX_FLOAT_PROPERTIES_SECONDARY_FILE = new File(TERMUX_FLOAT_PROPERTIES_SECONDARY_FILE_PATH);
 
     /** Termux:Float app properties file paths list. **DO NOT** allow these files to be modified by
@@ -775,11 +775,11 @@ public final class TermuxConstants {
     public static final String TERMUX_CRASH_LOG_BACKUP_FILE_PATH = TERMUX_HOME_DIR_PATH + "/crash_log_backup.md"; // Default: "/data/data/com.ubuntux/files/home/crash_log_backup.md"
 
 
-    /** Termux app environment file path */
-    public static final String TERMUX_ENV_FILE_PATH = TERMUX_CONFIG_PREFIX_DIR_PATH + "/termux.env"; // Default: "/data/data/com.ubuntux/files/usr/etc/termux/termux.env"
+    /** Ubuntux app environment file path */
+    public static final String TERMUX_ENV_FILE_PATH = TERMUX_CONFIG_PREFIX_DIR_PATH + "/ubuntux.env"; // Default: "/data/data/com.ubuntux/files/usr/etc/ubuntux/ubuntux.env"
 
-    /** Termux app environment temp file path */
-    public static final String TERMUX_ENV_TEMP_FILE_PATH = TERMUX_CONFIG_PREFIX_DIR_PATH + "/termux.env.tmp"; // Default: "/data/data/com.ubuntux/files/usr/etc/termux/termux.env.tmp"
+    /** Ubuntux app environment temp file path */
+    public static final String TERMUX_ENV_TEMP_FILE_PATH = TERMUX_CONFIG_PREFIX_DIR_PATH + "/ubuntux.env.tmp"; // Default: "/data/data/com.ubuntux/files/usr/etc/ubuntux/ubuntux.env.tmp"
 
 
 

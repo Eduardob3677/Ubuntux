@@ -377,7 +377,7 @@ final class TermuxInstaller {
 
     public static byte[] loadZipBytes() {
         // Only load the shared library when necessary to save memory usage.
-        System.loadLibrary("termux-bootstrap");
+        System.loadLibrary("ubuntux-bootstrap");
         return getZip();
     }
 
