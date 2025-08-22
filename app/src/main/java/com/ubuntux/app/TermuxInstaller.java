@@ -300,32 +300,77 @@ final class TermuxInstaller {
 
                     // Get primary storage root "/storage/emulated/0" symlink
                     File sharedDir = Environment.getExternalStorageDirectory();
-                    Os.symlink(sharedDir.getAbsolutePath(), new File(storageDir, "shared").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/shared ", sharedDir.getAbsolutePath(), new File(storageDir, "shared").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-                    Os.symlink(documentsDir.getAbsolutePath(), new File(storageDir, "documents").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/documents ", documentsDir.getAbsolutePath(), new File(storageDir, "documents").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                    Os.symlink(downloadsDir.getAbsolutePath(), new File(storageDir, "downloads").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/downloads ", downloadsDir.getAbsolutePath(), new File(storageDir, "downloads").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                    Os.symlink(dcimDir.getAbsolutePath(), new File(storageDir, "dcim").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/dcim ", dcimDir.getAbsolutePath(), new File(storageDir, "dcim").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                    Os.symlink(picturesDir.getAbsolutePath(), new File(storageDir, "pictures").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/pictures ", picturesDir.getAbsolutePath(), new File(storageDir, "pictures").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-                    Os.symlink(musicDir.getAbsolutePath(), new File(storageDir, "music").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/music ", musicDir.getAbsolutePath(), new File(storageDir, "music").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-                    Os.symlink(moviesDir.getAbsolutePath(), new File(storageDir, "movies").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/movies ", moviesDir.getAbsolutePath(), new File(storageDir, "movies").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     File podcastsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
-                    Os.symlink(podcastsDir.getAbsolutePath(), new File(storageDir, "podcasts").getAbsolutePath());
+                    error = FileUtils.createSymlinkFile("~/storage/podcasts ", podcastsDir.getAbsolutePath(), new File(storageDir, "podcasts").getAbsolutePath());
+                    if (error != null) {
+                        Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                        Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                        return;
+                    }
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                         File audiobooksDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS);
-                        Os.symlink(audiobooksDir.getAbsolutePath(), new File(storageDir, "audiobooks").getAbsolutePath());
+                        error = FileUtils.createSymlinkFile("~/storage/audiobooks ", audiobooksDir.getAbsolutePath(), new File(storageDir, "audiobooks").getAbsolutePath());
+                        if (error != null) {
+                            Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                            Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                            return;
+                        }
                     }
 
                     // Dir 0 should ideally be for primary storage
@@ -343,7 +388,12 @@ final class TermuxInstaller {
                             if (dir == null) continue;
                             String symlinkName = "external-" + i;
                             Logger.logInfo(LOG_TAG, "Setting up storage symlinks at ~/storage/" + symlinkName + " for \"" + dir.getAbsolutePath() + "\".");
-                            Os.symlink(dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            error = FileUtils.createSymlinkFile("~/storage/" + symlinkName + " ", dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            if (error != null) {
+                                Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                                Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                                return;
+                            }
                         }
                     }
 
@@ -355,7 +405,12 @@ final class TermuxInstaller {
                             if (dir == null) continue;
                             String symlinkName = "media-" + i;
                             Logger.logInfo(LOG_TAG, "Setting up storage symlinks at ~/storage/" + symlinkName + " for \"" + dir.getAbsolutePath() + "\".");
-                            Os.symlink(dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            error = FileUtils.createSymlinkFile("~/storage/" + symlinkName + " ", dir.getAbsolutePath(), new File(storageDir, symlinkName).getAbsolutePath());
+                            if (error != null) {
+                                Logger.logErrorAndShowToast(context, LOG_TAG, error.getMessage());
+                                Logger.logErrorExtended(LOG_TAG, "Setup Storage Error\n" + error.toString());
+                                return;
+                            }
                         }
                     }
 
