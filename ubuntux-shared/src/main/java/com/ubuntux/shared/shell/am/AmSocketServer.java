@@ -7,7 +7,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.ubuntux.am.Am;
+// import com.ubuntux.am.Am; // Commented out for Ubuntu transformation
 import com.ubuntux.shared.R;
 import com.ubuntux.shared.android.PackageUtils;
 import com.ubuntux.shared.android.PermissionUtils;
