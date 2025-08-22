@@ -88,7 +88,9 @@ public class UbuntuxBootstrap {
 
     /** Is {@link PackageManager#UBUNTU} set as {@link #UBUNTUX_APP_PACKAGE_MANAGER}. */
     public static boolean isAppPackageManagerUbuntu() {
-        return PackageManager.UBUNTU.equals(UBUNTUX_APP_PACKAGE_MANAGER);
+        boolean result = PackageManager.UBUNTU.equals(UBUNTUX_APP_PACKAGE_MANAGER);
+        Logger.logInfo("UbuntuxBootstrap", "Package manager check - UBUNTUX_APP_PACKAGE_MANAGER: " + UBUNTUX_APP_PACKAGE_MANAGER + ", isUbuntu: " + result);
+        return result;
     }
 
     ///** Is {@link PackageManager#TAPM} set as {@link #UBUNTUX_APP_PACKAGE_MANAGER}. */
