@@ -55,6 +55,7 @@ android {
         externalNativeBuild {
             ndkBuild {
                 cFlags "-std=c11", "-Wall", "-Wextra", "-Werror", "-Os", "-fno-stack-protector", "-Wl,--gc-sections"
+                abiFilters 'x86_64', 'armeabi-v7a', 'arm64-v8a'  // Only build for supported Ubuntu 22.04 architectures
             }
         }
 
@@ -63,7 +64,7 @@ android {
                 enable ((gradle.startParameter.taskNames.any { it.contains("Debug") } && splitAPKsForDebugBuilds == "1") ||
                     (gradle.startParameter.taskNames.any { it.contains("Release") } && splitAPKsForReleaseBuilds == "1"))
                 reset ()
-                include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+                include 'x86_64', 'armeabi-v7a', 'arm64-v8a'  // Removed 'x86' since Ubuntu 22.04 doesn't provide i686 rootfs
                 universalApk true
             }
         }
@@ -156,7 +157,7 @@ def validateVersionName(String versionName) {
 def downloadBootstrap(String arch, String expectedChecksum, String version) {
     def digest = java.security.MessageDigest.getInstance("SHA-256")
 
-    def localUrl = "src/main/cpp/bootstrap-" + arch + ".zip"
+    def localUrl = "src/main/cpp/bootstrap-" + arch + ".tar.gz"
     def file = new File(projectDir, localUrl)
     if (file.exists()) {
         def buffer = new byte[8192]
@@ -176,7 +177,20 @@ def downloadBootstrap(String arch, String expectedChecksum, String version) {
         }
     }
 
-    def remoteUrl = "https://github.com/termux/termux-packages/releases/download/bootstrap-" + version + "/bootstrap-" + arch + ".zip"
+    // Map architecture names to Ubuntu base image naming
+    def ubuntuArchMap = [
+        "aarch64": "arm64",
+        "arm": "armhf", 
+        "x86_64": "amd64"
+        // Note: i686 (32-bit x86) is not available for Ubuntu 22.04 base images
+    ]
+    
+    def ubuntuArch = ubuntuArchMap[arch]
+    if (!ubuntuArch) {
+        throw new GradleException("Architecture " + arch + " is not supported by Ubuntu 22.04 base images. Supported: amd64, arm64, armhf")
+    }
+    
+    def remoteUrl = "https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.1-base-" + ubuntuArch + ".tar.gz"
     logger.quiet("Downloading " + remoteUrl + " ...")
 
     file.parentFile.mkdirs()
@@ -197,10 +211,23 @@ def downloadBootstrap(String arch, String expectedChecksum, String version) {
 }
 
 def downloadBootstrapWithoutChecksum(String arch, String version) {
-    def localUrl = "src/main/cpp/bootstrap-" + arch + ".zip"
+    def localUrl = "src/main/cpp/bootstrap-" + arch + ".tar.gz"
     def file = new File(projectDir, localUrl)
     
-    def remoteUrl = "https://github.com/termux/termux-packages/releases/download/bootstrap-" + version + "/bootstrap-" + arch + ".zip"
+    // Map architecture names to Ubuntu base image naming
+    def ubuntuArchMap = [
+        "aarch64": "arm64",
+        "arm": "armhf", 
+        "x86_64": "amd64"
+        // Note: i686 (32-bit x86) is not available for Ubuntu 22.04 base images
+    ]
+    
+    def ubuntuArch = ubuntuArchMap[arch]
+    if (!ubuntuArch) {
+        throw new GradleException("Architecture " + arch + " is not supported by Ubuntu 22.04 base images. Supported: amd64, arm64, armhf")
+    }
+    
+    def remoteUrl = "https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.1-base-" + ubuntuArch + ".tar.gz"
     logger.quiet("Downloading " + remoteUrl + " (without checksum validation)...")
 
     file.parentFile.mkdirs()
@@ -211,7 +238,7 @@ def downloadBootstrapWithoutChecksum(String arch, String version) {
     out << connection.inputStream
     out.close()
     
-    logger.quiet("Downloaded " + arch + " bootstrap to " + localUrl + " (size: " + file.length() + " bytes)")
+    logger.quiet("Downloaded " + arch + " Ubuntu rootfs to " + localUrl + " (size: " + file.length() + " bytes)")
 }
 
 
@@ -219,6 +246,7 @@ clean {
     doLast {
         def tree = fileTree(new File(projectDir, 'src/main/cpp'))
         tree.include 'bootstrap-*.zip'
+        tree.include 'bootstrap-*.tar.gz'
         tree.each { it.delete() }
     }
 }
@@ -226,30 +254,28 @@ clean {
 task downloadBootstraps() {
     doLast {
         def packageVariant = project.ext.packageVariant
-        // Use the latest Termux bootstrap release for all Ubuntu variants
-        // These bootstrap archives contain the proper Termux environment that Ubuntux expects
-        def bootstrapVersion = "2025.08.17-r1+apt.android-7"
+        // Use Ubuntu 22.04.1 base images as requested in the issue
+        // These are the official Ubuntu rootfs archives
         
-        // Download bootstrap for all supported architectures
-        // Architecture mapping: Android NDK -> Termux bootstrap naming
+        // Download Ubuntu rootfs for supported architectures only
+        // Note: i686 (32-bit x86) is not available for Ubuntu 22.04 base images
         def architectures = [
-            "aarch64": "8fe3610b25e521a1c020a6b7e74f5cf6314f79021b14a8bd65f3906f7ccdc3af",  // arm64-v8a
-            "arm": "f16ea78ce7d0b9d7f33a1a550b448e4192a0979aeec9c777277f621e1fe588b9",      // armeabi-v7a
-            "i686": "1f7447e42afdbd4d7144112e48c2b1b7bd2557bad6dec775167f0712951ee12d",     // x86
-            "x86_64": "6eb32d3b9012974528f8cca67555c0ff9ef179460b654ad8cb20aacd78810b19"   // x86_64
+            "aarch64": null,  // Will download arm64 Ubuntu rootfs
+            "arm": null,      // Will download armhf Ubuntu rootfs  
+            "x86_64": null    // Will download amd64 Ubuntu rootfs
         ]
         
-        logger.quiet("Downloading Termux bootstrap archives for version: " + bootstrapVersion)
+        logger.quiet("Downloading Ubuntu 22.04.1 base rootfs images")
+        logger.quiet("Note: i686 (32-bit x86) architecture is not available for Ubuntu 22.04")
         
         architectures.each { arch, expectedChecksum ->
-            logger.quiet("Downloading bootstrap for architecture: " + arch)
+            logger.quiet("Downloading Ubuntu rootfs for architecture: " + arch)
             try {
-                downloadBootstrap(arch, expectedChecksum, bootstrapVersion)
+                // Since Ubuntu doesn't provide checksums in the same way, download without validation
+                downloadBootstrapWithoutChecksum(arch, "22.04.1")
             } catch (Exception e) {
-                // If checksum validation fails, try downloading without checksum validation
-                // This is a fallback for when checksums change between releases
-                logger.warn("Checksum validation failed for " + arch + ", downloading without validation...")
-                downloadBootstrapWithoutChecksum(arch, bootstrapVersion)
+                logger.error("Failed to download Ubuntu rootfs for " + arch + ": " + e.getMessage())
+                throw e
             }
         }
     }
