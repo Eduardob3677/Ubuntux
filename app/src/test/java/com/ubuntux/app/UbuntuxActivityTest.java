@@ -1,6 +1,6 @@
 package com.ubuntux.app;
 
-import com.ubuntux.shared.ubuntux.data.TermuxUrlUtils;
+import com.ubuntux.shared.ubuntux.data.UbuntuxUrlUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class UbuntuxActivityTest {
     private void assertUrlsAre(String text, String... urls) {
         LinkedHashSet<String> expected = new LinkedHashSet<>();
         Collections.addAll(expected, urls);
-        Assert.assertEquals(expected, TermuxUrlUtils.extractUrls(text));
+        Assert.assertEquals(expected, UbuntuxUrlUtils.extractUrls(text));
     }
 
     @Test

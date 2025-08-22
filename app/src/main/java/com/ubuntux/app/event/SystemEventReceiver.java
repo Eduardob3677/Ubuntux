@@ -11,10 +11,10 @@ import androidx.annotation.Nullable;
 
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.ubuntux.TermuxUtils;
-import com.ubuntux.shared.ubuntux.file.TermuxFileUtils;
-import com.ubuntux.shared.ubuntux.shell.command.environment.TermuxShellEnvironment;
-import com.ubuntux.shared.ubuntux.shell.TermuxShellManager;
+import com.ubuntux.shared.ubuntux.UbuntuxUtils;
+import com.ubuntux.shared.ubuntux.file.UbuntuxFileUtils;
+import com.ubuntux.shared.ubuntux.shell.command.environment.UbuntuxShellEnvironment;
+import com.ubuntux.shared.ubuntux.shell.UbuntuxShellManager;
 
 public class SystemEventReceiver extends BroadcastReceiver {
 
@@ -52,16 +52,16 @@ public class SystemEventReceiver extends BroadcastReceiver {
     }
 
     public synchronized void onActionBootCompleted(@NonNull Context context, @NonNull Intent intent) {
-        TermuxShellManager.onActionBootCompleted(context, intent);
+        UbuntuxShellManager.onActionBootCompleted(context, intent);
     }
 
     public synchronized void onActionPackageUpdated(@NonNull Context context, @NonNull Intent intent) {
         Uri data = intent.getData();
-        if (data != null && TermuxUtils.isUriDataForTermuxPluginPackage(data)) {
+        if (data != null && UbuntuxUtils.isUriDataForTermuxPluginPackage(data)) {
             Logger.logDebug(LOG_TAG, intent.getAction().replaceAll("^android.intent.action.", "") +
                 " event received for \"" + data.toString().replaceAll("^package:", "") + "\"");
-            if (TermuxFileUtils.isTermuxFilesDirectoryAccessible(context, false, false) == null)
-                TermuxShellEnvironment.writeEnvironmentToFile(context);
+            if (UbuntuxFileUtils.isTermuxFilesDirectoryAccessible(context, false, false) == null)
+                UbuntuxShellEnvironment.writeEnvironmentToFile(context);
         }
     }
 

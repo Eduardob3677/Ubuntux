@@ -1,4 +1,4 @@
-package com.ubuntux.app.fragments.settings.termux_widget;
+package com.ubuntux.app.fragments.settings.ubuntux_widget;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.ubuntux.R;
-import com.ubuntux.shared.ubuntux.settings.preferences.TermuxWidgetAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxWidgetAppSharedPreferences;
 
 @Keep
 public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
@@ -26,7 +26,7 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceManager preferenceManager = getPreferenceManager();
         preferenceManager.setPreferenceDataStore(DebuggingPreferencesDataStore.getInstance(context));
 
-        setPreferencesFromResource(R.xml.termux_widget_debugging_preferences, rootKey);
+        setPreferencesFromResource(R.xml.ubuntux_widget_debugging_preferences, rootKey);
 
         configureLoggingPreferences(context);
     }
@@ -37,10 +37,10 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
 
         ListPreference logLevelListPreference = findPreference("log_level");
         if (logLevelListPreference != null) {
-            TermuxWidgetAppSharedPreferences preferences = TermuxWidgetAppSharedPreferences.build(context, true);
+            UbuntuxWidgetAppSharedPreferences preferences = UbuntuxWidgetAppSharedPreferences.build(context, true);
             if (preferences == null) return;
 
-            com.ubuntux.app.fragments.settings.termux.DebuggingPreferencesFragment.
+            com.ubuntux.app.fragments.settings.ubuntux.DebuggingPreferencesFragment.
                 setLogLevelListPreferenceData(logLevelListPreference, context, preferences.getLogLevel(true));
             loggingCategory.addPreference(logLevelListPreference);
         }
@@ -50,13 +50,13 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
 class DebuggingPreferencesDataStore extends PreferenceDataStore {
 
     private final Context mContext;
-    private final TermuxWidgetAppSharedPreferences mPreferences;
+    private final UbuntuxWidgetAppSharedPreferences mPreferences;
 
     private static DebuggingPreferencesDataStore mInstance;
 
     private DebuggingPreferencesDataStore(Context context) {
         mContext = context;
-        mPreferences = TermuxWidgetAppSharedPreferences.build(context, true);
+        mPreferences = UbuntuxWidgetAppSharedPreferences.build(context, true);
     }
 
     public static synchronized DebuggingPreferencesDataStore getInstance(Context context) {

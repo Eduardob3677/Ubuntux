@@ -44,7 +44,7 @@ import com.ubuntux.shared.theme.ThemeUtils;
  * it with a {@link androidx.viewpager.widget.ViewPager}.:
  * {@code
  * <?xml version="1.0" encoding="utf-8"?>
- * <com.ubuntux.shared.termux.extrakeys.ExtraKeysView xmlns:android="http://schemas.android.com/apk/res/android"
+ * <com.ubuntux.shared.ubuntux.extrakeys.ExtraKeysView xmlns:android="http://schemas.android.com/apk/res/android"
  *     android:id="@+id/extra_keys"
  *     style="?android:attr/buttonBarStyle"
  *     android:layout_width="match_parent"
@@ -64,12 +64,12 @@ import com.ubuntux.shared.theme.ThemeUtils;
  * it the {@link ExtraKeysInfo} to load and display the extra keys. Read its class javadocs for more
  * info on how to create it.
  *
- * Termux app defines the view in res/layout/view_terminal_toolbar_extra_keys and
+ * Ubuntux app defines the view in res/layout/view_terminal_toolbar_extra_keys and
  * inflates it in TerminalToolbarViewPager.instantiateItem() and sets the {@link ExtraKeysView} client
  * and calls {@link ExtraKeysView#reload(ExtraKeysInfo).
- * The {@link ExtraKeysInfo} is created by TermuxAppSharedProperties.setExtraKeys().
+ * The {@link ExtraKeysInfo} is created by UbuntuxAppSharedProperties.setExtraKeys().
  * Then its got and the view height is adjusted in UbuntuxActivity.setTerminalToolbarHeight().
- * The client used is TermuxTerminalExtraKeys, which extends
+ * The client used is UbuntuxTerminalExtraKeys, which extends
  * {@link TerminalExtraKeys } to handle Termux app specific logic and
  * leave the rest to the super class.
  */

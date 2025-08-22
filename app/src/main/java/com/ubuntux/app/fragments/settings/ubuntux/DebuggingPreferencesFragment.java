@@ -1,4 +1,4 @@
-package com.ubuntux.app.fragments.settings.termux;
+package com.ubuntux.app.fragments.settings.ubuntux;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.ubuntux.R;
-import com.ubuntux.shared.ubuntux.settings.preferences.TermuxAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxAppSharedPreferences;
 import com.ubuntux.shared.logger.Logger;
 
 @Keep
@@ -27,7 +27,7 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceManager preferenceManager = getPreferenceManager();
         preferenceManager.setPreferenceDataStore(DebuggingPreferencesDataStore.getInstance(context));
 
-        setPreferencesFromResource(R.xml.termux_debugging_preferences, rootKey);
+        setPreferencesFromResource(R.xml.ubuntux_debugging_preferences, rootKey);
 
         configureLoggingPreferences(context);
     }
@@ -38,7 +38,7 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
 
         ListPreference logLevelListPreference = findPreference("log_level");
         if (logLevelListPreference != null) {
-            TermuxAppSharedPreferences preferences = TermuxAppSharedPreferences.build(context, true);
+            UbuntuxAppSharedPreferences preferences = UbuntuxAppSharedPreferences.build(context, true);
             if (preferences == null) return;
 
             setLogLevelListPreferenceData(logLevelListPreference, context, preferences.getLogLevel());
@@ -67,13 +67,13 @@ public class DebuggingPreferencesFragment extends PreferenceFragmentCompat {
 class DebuggingPreferencesDataStore extends PreferenceDataStore {
 
     private final Context mContext;
-    private final TermuxAppSharedPreferences mPreferences;
+    private final UbuntuxAppSharedPreferences mPreferences;
 
     private static DebuggingPreferencesDataStore mInstance;
 
     private DebuggingPreferencesDataStore(Context context) {
         mContext = context;
-        mPreferences = TermuxAppSharedPreferences.build(context, true);
+        mPreferences = UbuntuxAppSharedPreferences.build(context, true);
     }
 
     public static synchronized DebuggingPreferencesDataStore getInstance(Context context) {

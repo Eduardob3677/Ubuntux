@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.shell.command.ExecutionCommand;
-import com.ubuntux.shared.ubuntux.settings.properties.TermuxAppSharedProperties;
+import com.ubuntux.shared.ubuntux.settings.properties.UbuntuxAppSharedProperties;
 import com.ubuntux.shared.errors.Errno;
 
 /**
  * Utility class for handling execution command errors in Ubuntux without plugin dependencies.
- * This replaces TermuxPluginUtils for Ubuntu-specific functionality.
+ * This replaces UbuntuxPluginUtils for Ubuntu-specific functionality.
  */
 public class UbuntuxErrorUtils {
 
@@ -94,7 +94,7 @@ public class UbuntuxErrorUtils {
     public static String checkIfAllowExternalAppsPolicyIsViolated(final Context context, String apiName) {
         // For Ubuntu environment, we're more permissive by default
         // but still check the setting if available
-        TermuxAppSharedProperties properties = TermuxAppSharedProperties.getProperties();
+        UbuntuxAppSharedProperties properties = UbuntuxAppSharedProperties.getProperties();
         if (properties != null && !properties.shouldAllowExternalApps()) {
             return "External app access is disabled in Ubuntu settings for: " + apiName;
         }

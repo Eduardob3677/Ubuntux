@@ -1,4 +1,4 @@
-package com.ubuntux.app.fragments.settings.termux;
+package com.ubuntux.app.fragments.settings.ubuntux;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.ubuntux.R;
-import com.ubuntux.shared.ubuntux.settings.preferences.TermuxAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.UbuntuxAppSharedPreferences;
 
 @Keep
 public class TerminalViewPreferencesFragment extends PreferenceFragmentCompat {
@@ -22,7 +22,7 @@ public class TerminalViewPreferencesFragment extends PreferenceFragmentCompat {
         PreferenceManager preferenceManager = getPreferenceManager();
         preferenceManager.setPreferenceDataStore(TerminalViewPreferencesDataStore.getInstance(context));
 
-        setPreferencesFromResource(R.xml.termux_terminal_view_preferences, rootKey);
+        setPreferencesFromResource(R.xml.ubuntux_terminal_view_preferences, rootKey);
     }
 
 }
@@ -30,13 +30,13 @@ public class TerminalViewPreferencesFragment extends PreferenceFragmentCompat {
 class TerminalViewPreferencesDataStore extends PreferenceDataStore {
 
     private final Context mContext;
-    private final TermuxAppSharedPreferences mPreferences;
+    private final UbuntuxAppSharedPreferences mPreferences;
 
     private static TerminalViewPreferencesDataStore mInstance;
 
     private TerminalViewPreferencesDataStore(Context context) {
         mContext = context;
-        mPreferences = TermuxAppSharedPreferences.build(context, true);
+        mPreferences = UbuntuxAppSharedPreferences.build(context, true);
     }
 
     public static synchronized TerminalViewPreferencesDataStore getInstance(Context context) {

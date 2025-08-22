@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:title="@string/ubuntux_debugging_preferences_title"
+        app:summary="@string/ubuntux_debugging_preferences_summary"
+        app:fragment="com.ubuntux.app.fragments.settings.ubuntux_float.DebuggingPreferencesFragment"/>
+
+</PreferenceScreen>

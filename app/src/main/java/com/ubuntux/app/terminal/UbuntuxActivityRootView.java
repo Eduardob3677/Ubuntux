@@ -22,7 +22,7 @@ import com.ubuntux.shared.view.ViewUtils;
 
 /**
  * The {@link UbuntuxActivity} relies on {@link android.view.WindowManager.LayoutParams#SOFT_INPUT_ADJUST_RESIZE)}
- * set by {@link TermuxTerminalViewClient#setSoftKeyboardState(boolean, boolean)} to automatically
+ * set by {@link UbuntuxTerminalViewClient#setSoftKeyboardState(boolean, boolean)} to automatically
  * resize the view and push the terminal up when soft keyboard is opened. However, this does not
  * always work properly. When `enforce-char-based-input=true` is set in `termux.properties`
  * and {@link com.ubuntux.view.TerminalView#onCreateInputConnection(EditorInfo)} sets the inputType

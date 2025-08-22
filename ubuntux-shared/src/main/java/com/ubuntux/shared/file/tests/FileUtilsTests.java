@@ -27,7 +27,7 @@ public class FileUtilsTests {
      * The log level must be set to verbose.
      *
      * Run at app startup like in an activity
-     * FileUtilsTests.runTests(this, TermuxConstants.TERMUX_HOME_DIR_PATH + "/FileUtilsTests");
+     * FileUtilsTests.runTests(this, UbuntuxConstants.UBUNTUX_HOME_DIR_PATH + "/FileUtilsTests");
      *
      * @param context The {@link Context} for operations.
      */
