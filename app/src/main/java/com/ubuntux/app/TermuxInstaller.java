@@ -207,7 +207,10 @@ final class TermuxInstaller {
                     if (symlinks.isEmpty())
                         throw new RuntimeException("No SYMLINKS.txt encountered");
                     for (Pair<String, String> symlink : symlinks) {
-                        Os.symlink(symlink.first, symlink.second);
+                        Error symlinkError = FileUtils.createSymlinkFile("bootstrap symlink ", symlink.first, symlink.second);
+                        if (symlinkError != null) {
+                            throw new RuntimeException("Failed to create symlink from \"" + symlink.first + "\" to \"" + symlink.second + "\": " + symlinkError.toString());
+                        }
                     }
 
                     Logger.logInfo(LOG_TAG, "Moving prefix staging to prefix directory.");
