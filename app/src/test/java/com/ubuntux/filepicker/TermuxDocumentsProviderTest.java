@@ -1,6 +1,6 @@
 package com.ubuntux.filepicker;
 
-import com.ubuntux.shared.termux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
 
 import org.junit.Test;
 

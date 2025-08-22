@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.utils.UbuntuxErrorUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

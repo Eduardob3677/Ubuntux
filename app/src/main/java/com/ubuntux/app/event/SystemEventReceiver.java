@@ -11,10 +11,10 @@ import androidx.annotation.Nullable;
 
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.TermuxUtils;
-import com.ubuntux.shared.termux.file.TermuxFileUtils;
-import com.ubuntux.shared.termux.shell.command.environment.TermuxShellEnvironment;
-import com.ubuntux.shared.termux.shell.TermuxShellManager;
+import com.ubuntux.shared.ubuntux.TermuxUtils;
+import com.ubuntux.shared.ubuntux.file.TermuxFileUtils;
+import com.ubuntux.shared.ubuntux.shell.command.environment.TermuxShellEnvironment;
+import com.ubuntux.shared.ubuntux.shell.TermuxShellManager;
 
 public class SystemEventReceiver extends BroadcastReceiver {
 

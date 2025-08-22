@@ -9,7 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.ubuntux.R;
-import com.ubuntux.shared.termux.settings.preferences.TermuxFloatAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.preferences.TermuxFloatAppSharedPreferences;
 
 @Keep
 public class TermuxFloatPreferencesFragment extends PreferenceFragmentCompat {

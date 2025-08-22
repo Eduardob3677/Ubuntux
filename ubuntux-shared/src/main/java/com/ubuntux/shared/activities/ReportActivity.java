@@ -23,7 +23,7 @@ import com.ubuntux.shared.file.FileUtils;
 import com.ubuntux.shared.file.filesystem.FileType;
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.errors.Error;
-import com.ubuntux.shared.termux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
 import com.ubuntux.shared.markdown.MarkdownUtils;
 import com.ubuntux.shared.interact.ShareUtils;
 import com.ubuntux.shared.models.ReportInfo;

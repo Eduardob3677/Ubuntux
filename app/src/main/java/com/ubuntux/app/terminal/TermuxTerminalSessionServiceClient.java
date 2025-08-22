@@ -5,8 +5,8 @@ import android.app.Service;
 import androidx.annotation.NonNull;
 
 import com.ubuntux.app.TermuxService;
-import com.ubuntux.shared.termux.shell.command.runner.terminal.TermuxSession;
-import com.ubuntux.shared.termux.terminal.TermuxTerminalSessionClientBase;
+import com.ubuntux.shared.ubuntux.shell.command.runner.terminal.TermuxSession;
+import com.ubuntux.shared.ubuntux.terminal.TermuxTerminalSessionClientBase;
 import com.ubuntux.terminal.TerminalSession;
 import com.ubuntux.terminal.TerminalSessionClient;
 

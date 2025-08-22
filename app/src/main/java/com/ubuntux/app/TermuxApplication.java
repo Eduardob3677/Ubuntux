@@ -6,16 +6,16 @@ import android.content.Context;
 import com.ubuntux.BuildConfig;
 import com.ubuntux.shared.errors.Error;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.TermuxBootstrap;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.crash.TermuxCrashUtils;
-import com.ubuntux.shared.termux.file.TermuxFileUtils;
-import com.ubuntux.shared.termux.settings.preferences.TermuxAppSharedPreferences;
-import com.ubuntux.shared.termux.settings.properties.TermuxAppSharedProperties;
-import com.ubuntux.shared.termux.shell.command.environment.TermuxShellEnvironment;
-import com.ubuntux.shared.termux.shell.am.TermuxAmSocketServer;
-import com.ubuntux.shared.termux.shell.TermuxShellManager;
-import com.ubuntux.shared.termux.theme.TermuxThemeUtils;
+import com.ubuntux.shared.ubuntux.TermuxBootstrap;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.crash.TermuxCrashUtils;
+import com.ubuntux.shared.ubuntux.file.TermuxFileUtils;
+import com.ubuntux.shared.ubuntux.settings.preferences.TermuxAppSharedPreferences;
+import com.ubuntux.shared.ubuntux.settings.properties.TermuxAppSharedProperties;
+import com.ubuntux.shared.ubuntux.shell.command.environment.TermuxShellEnvironment;
+import com.ubuntux.shared.ubuntux.shell.am.TermuxAmSocketServer;
+import com.ubuntux.shared.ubuntux.shell.TermuxShellManager;
+import com.ubuntux.shared.ubuntux.theme.TermuxThemeUtils;
 
 public class TermuxApplication extends Application {
 

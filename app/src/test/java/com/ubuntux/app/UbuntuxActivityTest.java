@@ -1,6 +1,6 @@
 package com.ubuntux.app;
 
-import com.ubuntux.shared.termux.data.TermuxUrlUtils;
+import com.ubuntux.shared.ubuntux.data.TermuxUrlUtils;
 
 import org.junit.Assert;
 import org.junit.Test;

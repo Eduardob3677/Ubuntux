@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.ubuntux.R;
 import com.ubuntux.app.UbuntuxActivity;
-import com.ubuntux.shared.termux.shell.command.runner.terminal.TermuxSession;
+import com.ubuntux.shared.ubuntux.shell.command.runner.terminal.TermuxSession;
 import com.ubuntux.shared.theme.NightMode;
 import com.ubuntux.shared.theme.ThemeUtils;
 import com.ubuntux.terminal.TerminalSession;

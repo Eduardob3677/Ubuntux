@@ -12,16 +12,16 @@ import android.view.WindowManager;
 
 import com.ubuntux.R;
 import com.ubuntux.shared.file.FileUtils;
-import com.ubuntux.shared.termux.crash.TermuxCrashUtils;
-import com.ubuntux.shared.termux.file.TermuxFileUtils;
+import com.ubuntux.shared.ubuntux.crash.TermuxCrashUtils;
+import com.ubuntux.shared.ubuntux.file.TermuxFileUtils;
 import com.ubuntux.shared.interact.MessageDialogUtils;
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.markdown.MarkdownUtils;
 import com.ubuntux.shared.errors.Error;
 import com.ubuntux.shared.android.PackageUtils;
-import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.TermuxUtils;
-import com.ubuntux.shared.termux.shell.command.environment.TermuxShellEnvironment;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.TermuxUtils;
+import com.ubuntux.shared.ubuntux.shell.command.environment.TermuxShellEnvironment;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

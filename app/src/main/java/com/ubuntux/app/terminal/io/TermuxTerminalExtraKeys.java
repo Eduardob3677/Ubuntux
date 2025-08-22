@@ -11,11 +11,11 @@ import com.ubuntux.app.UbuntuxActivity;
 import com.ubuntux.app.terminal.TermuxTerminalSessionActivityClient;
 import com.ubuntux.app.terminal.TermuxTerminalViewClient;
 import com.ubuntux.shared.logger.Logger;
-import com.ubuntux.shared.termux.extrakeys.ExtraKeysConstants;
-import com.ubuntux.shared.termux.extrakeys.ExtraKeysInfo;
-import com.ubuntux.shared.termux.settings.properties.TermuxPropertyConstants;
-import com.ubuntux.shared.termux.settings.properties.TermuxSharedProperties;
-import com.ubuntux.shared.termux.terminal.io.TerminalExtraKeys;
+import com.ubuntux.shared.ubuntux.extrakeys.ExtraKeysConstants;
+import com.ubuntux.shared.ubuntux.extrakeys.ExtraKeysInfo;
+import com.ubuntux.shared.ubuntux.settings.properties.TermuxPropertyConstants;
+import com.ubuntux.shared.ubuntux.settings.properties.TermuxSharedProperties;
+import com.ubuntux.shared.ubuntux.terminal.io.TerminalExtraKeys;
 import com.ubuntux.view.TerminalView;
 
 import org.json.JSONException;

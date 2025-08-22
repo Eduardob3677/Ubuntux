@@ -13,13 +13,13 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
-import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
+import com.ubuntux.shared.ubuntux.utils.UbuntuxErrorUtils;
 import com.ubuntux.shared.data.DataUtils;
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.net.uri.UriUtils;
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.net.uri.UriScheme;
-import com.ubuntux.shared.termux.TermuxConstants;
+import com.ubuntux.shared.ubuntux.TermuxConstants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
