@@ -230,4 +230,8 @@
     <!-- Donate Preference -->
     <string name="donate_preference_title">Donate</string>
 
+    <!-- Styling errors -->
+    <string name="error_styling_not_installed">Ubuntu styling not installed</string>
+    <string name="action_styling_install">Install</string>
+
 </resources>

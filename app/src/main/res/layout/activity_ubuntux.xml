@@ -1,14 +1,14 @@
-<com.termux.app.terminal.TermuxActivityRootView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ubuntux.app.terminal.UbuntuxActivityRootView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_termux_root_view"
+    android:id="@+id/activity_ubuntux_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
-        android:id="@+id/activity_termux_root_relative_layout"
+        android:id="@+id/activity_ubuntux_root_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -23,7 +23,7 @@
             android:layout_above="@+id/terminal_toolbar_view_pager"
             android:layout_height="match_parent">
 
-            <com.termux.view.TerminalView
+            <com.ubuntux.view.TerminalView
                 android:id="@+id/terminal_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -107,9 +107,9 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/activity_termux_bottom_space_view"
+        android:id="@+id/activity_ubuntux_bottom_space_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/transparent" />
 
-</com.termux.app.terminal.TermuxActivityRootView>
+</com.ubuntux.app.terminal.UbuntuxActivityRootView>

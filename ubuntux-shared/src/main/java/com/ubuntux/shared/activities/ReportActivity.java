@@ -39,9 +39,9 @@ import io.noties.markwon.recycler.SimpleEntry;
 /**
  * An activity to show reports in markdown format as per CommonMark spec based on config passed as {@link ReportInfo}.
  * Add Following to `AndroidManifest.xml` to use in an app:
- * {@code `<activity android:name="com.termux.shared.activities.ReportActivity" android:theme="@style/Theme.AppCompat.TermuxReportActivity" android:documentLaunchMode="intoExisting" />` }
+ * {@code `<activity android:name="com.ubuntux.shared.activities.ReportActivity" android:theme="@style/Theme.AppCompat.UbuntuxReportActivity" android:documentLaunchMode="intoExisting" />` }
  * and
- * {@code `<receiver android:name="com.termux.shared.activities.ReportActivity$ReportActivityBroadcastReceiver"  android:exported="false" />` }
+ * {@code `<receiver android:name="com.ubuntux.shared.activities.ReportActivity$ReportActivityBroadcastReceiver"  android:exported="false" />` }
  * Receiver **must not** be `exported="true"`!!!
  *
  * Also make an incremental call to {@link #deleteReportInfoFilesOlderThanXDays(Context, int, boolean)}

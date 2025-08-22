@@ -39,7 +39,7 @@ import java.util.Locale;
  *
  * Add Following to `AndroidManifest.xml` to use in an app:
  *
- * {@code ` <activity android:name="com.termux.shared.activities.TextIOActivity" android:theme="@style/Theme.AppCompat.TermuxTextIOActivity" />` }
+ * {@code ` <activity android:name="com.ubuntux.shared.activities.TextIOActivity" android:theme="@style/Theme.AppCompat.UbuntuxTextIOActivity" />` }
  */
 public class TextIOActivity extends AppCompatActivity {
 
