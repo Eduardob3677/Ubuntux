@@ -280,7 +280,7 @@ bash←bin/bash""".trim()
             zipOutput.write(symlinks.getBytes())
         } else if (name.startsWith("bin/") || name.startsWith("usr/bin/")) {
             // Add minimal binary content (this will be replaced with actual binaries)
-            zipOutput.write("#!/bin/bash\necho 'Ubuntu " + name + "'\n".getBytes())
+            zipOutput.write(("#!/bin/bash\necho 'Ubuntu " + name + "'\n").getBytes())
         }
     }
     
