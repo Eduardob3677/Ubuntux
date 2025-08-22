@@ -11,6 +11,9 @@
 #-renamesourcefileattribute SourceFile
 #-keepattributes SourceFile,LineNumberTable
 
+# Keep DocumentsProvider to prevent ClassNotFoundException
+-keep class com.ubuntux.filepicker.TermuxDocumentsProvider { *; }
+
 # Temp fix for androidx.window:window:1.0.0-alpha09 imported by termux-shared
 # https://issuetracker.google.com/issues/189001730
 # https://android-review.googlesource.com/c/platform/frameworks/support/+/1757630
