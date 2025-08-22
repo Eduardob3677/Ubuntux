@@ -17,7 +17,7 @@ import com.ubuntux.shared.shell.am.AmSocketServerRunConfig;
 import com.ubuntux.shared.shell.am.AmSocketServer;
 import com.ubuntux.shared.termux.TermuxConstants;
 import com.ubuntux.shared.termux.crash.TermuxCrashUtils;
-import com.ubuntux.shared.termux.plugins.TermuxPluginUtils;
+import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.termux.settings.properties.TermuxAppSharedProperties;
 import com.ubuntux.shared.termux.settings.properties.TermuxPropertyConstants;
 import com.ubuntux.shared.termux.shell.command.environment.TermuxAppShellEnvironment;
@@ -148,9 +148,7 @@ public class TermuxAmSocketServer {
     }
 
     /**
-     * Show an error notification on the {@link TermuxConstants#TERMUX_PLUGIN_COMMAND_ERRORS_NOTIFICATION_CHANNEL_ID}
-     * {@link TermuxConstants#TERMUX_PLUGIN_COMMAND_ERRORS_NOTIFICATION_CHANNEL_NAME} with a call
-     * to {@link TermuxPluginUtils#sendPluginCommandErrorNotification(Context, String, CharSequence, String, String)}.
+     * Log an error instead of showing notification (Ubuntu doesn't use plugin notifications).
      *
      * @param context The {@link Context} to send the notification with.
      * @param error The {@link Error} generated.
@@ -160,9 +158,9 @@ public class TermuxAmSocketServer {
     public static synchronized void showErrorNotification(@NonNull Context context, @NonNull Error error,
                                                           @NonNull LocalSocketRunConfig localSocketRunConfig,
                                                           @Nullable LocalClientSocket clientSocket) {
-        TermuxPluginUtils.sendPluginCommandErrorNotification(context, LOG_TAG,
-            localSocketRunConfig.getTitle() + " Socket Server Error", error.getMinimalErrorString(),
-            LocalSocketManager.getErrorMarkdownString(error, localSocketRunConfig, clientSocket));
+        // For Ubuntu, we just log the error instead of showing a plugin notification
+        Logger.logErrorExtended(LOG_TAG, localSocketRunConfig.getTitle() + " Socket Server Error: " + 
+            error.getMinimalErrorString());
     }
 
 

@@ -51,12 +51,6 @@ android {
 
         manifestPlaceholders.TERMUX_PACKAGE_NAME = "com.ubuntux"
         manifestPlaceholders.TERMUX_APP_NAME = "Ubuntux"
-        manifestPlaceholders.TERMUX_API_APP_NAME = "Ubuntux:API"
-        manifestPlaceholders.TERMUX_BOOT_APP_NAME = "Ubuntux:Boot"
-        manifestPlaceholders.TERMUX_FLOAT_APP_NAME = "Ubuntux:Float"
-        manifestPlaceholders.TERMUX_STYLING_APP_NAME = "Ubuntux:Styling"
-        manifestPlaceholders.TERMUX_TASKER_APP_NAME = "Ubuntux:Tasker"
-        manifestPlaceholders.TERMUX_WIDGET_APP_NAME = "Ubuntux:Widget"
 
         externalNativeBuild {
             ndkBuild {

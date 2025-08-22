@@ -12,7 +12,7 @@ import android.os.IBinder;
 import com.ubuntux.R;
 import com.ubuntux.shared.data.DataUtils;
 import com.ubuntux.shared.data.IntentUtils;
-import com.ubuntux.shared.termux.plugins.TermuxPluginUtils;
+import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
 import com.ubuntux.shared.termux.file.TermuxFileUtils;
 import com.ubuntux.shared.file.filesystem.FileType;
 import com.ubuntux.shared.errors.Errno;
@@ -75,7 +75,7 @@ public class RunCommandService extends Service {
         if (!RUN_COMMAND_SERVICE.ACTION_RUN_COMMAND.equals(intent.getAction())) {
             errmsg = this.getString(R.string.error_run_command_service_invalid_intent_action, intent.getAction());
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             return stopService();
         }
 
@@ -110,7 +110,7 @@ public class RunCommandService extends Service {
         if (Runner.runnerOf(executionCommand.runner) == null) {
             errmsg = this.getString(R.string.error_run_command_service_invalid_execution_command_runner, executionCommand.runner);
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             return stopService();
         }
 
@@ -137,10 +137,10 @@ public class RunCommandService extends Service {
         // user knows someone tried to run a command in termux context, since it may be malicious
         // app or imported (tasker) plugin project and not the user himself. If a pending intent is
         // also sent, then its creator is also logged and shown.
-        errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(this, LOG_TAG);
+        errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(this, LOG_TAG);
         if (errmsg != null) {
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, true);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, true);
             return stopService();
         }
 
@@ -150,7 +150,7 @@ public class RunCommandService extends Service {
         if (executionCommand.executable == null || executionCommand.executable.isEmpty()) {
             errmsg  = this.getString(R.string.error_run_command_service_mandatory_extra_missing, RUN_COMMAND_SERVICE.EXTRA_COMMAND_PATH);
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             return stopService();
         }
 
@@ -164,7 +164,7 @@ public class RunCommandService extends Service {
             false);
         if (error != null) {
             executionCommand.setStateFailed(error);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             return stopService();
         }
 
@@ -185,7 +185,7 @@ public class RunCommandService extends Service {
                 false, true);
             if (error != null) {
                 executionCommand.setStateFailed(error);
-                TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+                UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
                 return stopService();
             }
         }
