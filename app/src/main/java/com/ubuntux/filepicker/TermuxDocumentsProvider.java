@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.ubuntux.shared.logger.Logger;
 import com.ubuntux.shared.termux.TermuxConstants;
-import com.ubuntux.shared.termux.plugins.TermuxPluginUtils;
+import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +61,7 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
     @Override
     public Cursor queryRoots(String[] projection) throws FileNotFoundException {
         // Check if external apps policy allows access
-        String errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
+        String errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
         if (errmsg != null) {
             throw new FileNotFoundException(errmsg);
         }
@@ -86,7 +86,7 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
     @Override
     public Cursor queryDocument(String documentId, String[] projection) throws FileNotFoundException {
         // Check if external apps policy allows access
-        String errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
+        String errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
         if (errmsg != null) {
             throw new FileNotFoundException(errmsg);
         }
@@ -100,7 +100,7 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
     public Cursor queryChildDocuments(String parentDocumentId, String[] projection, String sortOrder) 
             throws FileNotFoundException {
         // Check if external apps policy allows access
-        String errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
+        String errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
         if (errmsg != null) {
             throw new FileNotFoundException(errmsg);
         }
@@ -127,7 +127,7 @@ public class TermuxDocumentsProvider extends DocumentsProvider {
     public ParcelFileDescriptor openDocument(String documentId, String mode, @Nullable CancellationSignal signal) 
             throws FileNotFoundException {
         // Check if external apps policy allows access
-        String errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
+        String errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
         if (errmsg != null) {
             throw new FileNotFoundException(errmsg);
         }

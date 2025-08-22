@@ -13,7 +13,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
-import com.ubuntux.shared.termux.plugins.TermuxPluginUtils;
+import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
 import com.ubuntux.shared.data.DataUtils;
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.net.uri.UriUtils;
@@ -204,7 +204,7 @@ public class TermuxOpenReceiver extends BroadcastReceiver {
                 }
 
                 // If TermuxConstants.PROP_ALLOW_EXTERNAL_APPS property to not set to "true", then throw exception
-                String errmsg = TermuxPluginUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
+                String errmsg = UbuntuxErrorUtils.checkIfAllowExternalAppsPolicyIsViolated(getContext(), LOG_TAG);
                 if (errmsg != null) {
                     throw new IllegalArgumentException(errmsg);
                 }

@@ -22,7 +22,7 @@ import com.ubuntux.R;
 import com.ubuntux.app.event.SystemEventReceiver;
 import com.ubuntux.app.terminal.TermuxTerminalSessionActivityClient;
 import com.ubuntux.app.terminal.TermuxTerminalSessionServiceClient;
-import com.ubuntux.shared.termux.plugins.TermuxPluginUtils;
+import com.ubuntux.shared.termux.utils.UbuntuxErrorUtils;
 import com.ubuntux.shared.data.IntentUtils;
 import com.ubuntux.shared.net.uri.UriUtils;
 import com.ubuntux.shared.errors.Errno;
@@ -292,7 +292,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
             ExecutionCommand executionCommand = pendingPluginExecutionCommands.get(i);
             if (!executionCommand.shouldNotProcessResults() && executionCommand.isPluginExecutionCommandWithPendingResult()) {
                 if (executionCommand.setStateFailed(Errno.ERRNO_CANCELLED.getCode(), this.getString(com.ubuntux.shared.R.string.error_execution_cancelled))) {
-                    TermuxPluginUtils.processPluginExecutionCommandResult(this, LOG_TAG, executionCommand);
+                    UbuntuxErrorUtils.processExecutionCommandResult(this, LOG_TAG, executionCommand);
                 }
             }
         }
@@ -373,7 +373,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
         if (Runner.runnerOf(executionCommand.runner) == null) {
             String errmsg = this.getString(R.string.error_ubuntux_service_invalid_execution_command_runner, executionCommand.runner);
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             return;
         }
 
@@ -420,7 +420,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
         else {
             String errmsg = getString(R.string.error_ubuntux_service_unsupported_execution_command_runner, executionCommand.runner);
             executionCommand.setStateFailed(Errno.ERRNO_FAILED.getCode(), errmsg);
-            TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+            UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
         }
     }
 
@@ -483,7 +483,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
             Logger.logError(LOG_TAG, "Failed to execute new TermuxTask command for:\n" + executionCommand.getCommandIdAndLabelLogString());
             // If the execution command was started for a plugin, then process the error
             if (executionCommand.isPluginExecutionCommand)
-                TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+                UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             else {
                 Logger.logError(LOG_TAG, "Set log level to debug or higher to see error in logs");
                 Logger.logErrorPrivateExtended(LOG_TAG, executionCommand.toString());
@@ -514,7 +514,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
 
                 // If the execution command was started for a plugin, then process the results
                 if (executionCommand != null && executionCommand.isPluginExecutionCommand)
-                    TermuxPluginUtils.processPluginExecutionCommandResult(this, LOG_TAG, executionCommand);
+                    UbuntuxErrorUtils.processExecutionCommandResult(this, LOG_TAG, executionCommand);
 
                 mShellManager.mTermuxTasks.remove(termuxTask);
             }
@@ -597,7 +597,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
             Logger.logError(LOG_TAG, "Failed to execute new TermuxSession command for:\n" + executionCommand.getCommandIdAndLabelLogString());
             // If the execution command was started for a plugin, then process the error
             if (executionCommand.isPluginExecutionCommand)
-                TermuxPluginUtils.processPluginExecutionCommandError(this, LOG_TAG, executionCommand, false);
+                UbuntuxErrorUtils.processExecutionCommandError(this, LOG_TAG, executionCommand, false);
             else {
                 Logger.logError(LOG_TAG, "Set log level to debug or higher to see error in logs");
                 Logger.logErrorPrivateExtended(LOG_TAG, executionCommand.toString());
@@ -645,7 +645,7 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
 
             // If the execution command was started for a plugin, then process the results
             if (executionCommand != null && executionCommand.isPluginExecutionCommand)
-                TermuxPluginUtils.processPluginExecutionCommandResult(this, LOG_TAG, executionCommand);
+                UbuntuxErrorUtils.processExecutionCommandResult(this, LOG_TAG, executionCommand);
 
             mShellManager.mTermuxSessions.remove(termuxSession);
 
@@ -667,14 +667,14 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
             return ShellCreateMode.ALWAYS; // Default
         else if (ShellCreateMode.NO_SHELL_WITH_NAME.equalsMode(executionCommand.shellCreateMode))
             if (DataUtils.isNullOrEmpty(executionCommand.shellName)) {
-                TermuxPluginUtils.setAndProcessPluginExecutionCommandError(this, LOG_TAG, executionCommand, false,
+                UbuntuxErrorUtils.setAndProcessExecutionCommandError(this, LOG_TAG, executionCommand, false,
                     getString(R.string.error_ubuntux_service_execution_command_shell_name_unset, executionCommand.shellCreateMode));
                 return null;
             } else {
                return ShellCreateMode.NO_SHELL_WITH_NAME;
             }
         else {
-            TermuxPluginUtils.setAndProcessPluginExecutionCommandError(this, LOG_TAG, executionCommand, false,
+            UbuntuxErrorUtils.setAndProcessExecutionCommandError(this, LOG_TAG, executionCommand, false,
                 getString(R.string.error_ubuntux_service_unsupported_execution_command_shell_create_mode, executionCommand.shellCreateMode));
             return null;
         }
