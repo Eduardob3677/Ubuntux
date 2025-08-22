@@ -203,7 +203,7 @@ def downloadBootstrap(String arch, String expectedChecksum, String version) {
 }
 
 def createUbuntuBootstrap(String version) {
-    // For now, create minimal bootstrap structure for each architecture
+    // For now, create minimal Ubuntu rootfs structure for each architecture
     // This will be replaced with actual Ubuntu rootfs setup
     def architectures = ["aarch64", "arm", "i686", "x86_64"]
     
@@ -216,28 +216,49 @@ def createUbuntuBootstrap(String version) {
             return
         }
         
-        logger.quiet("Creating minimal Ubuntu bootstrap for " + arch)
+        logger.quiet("Creating Ubuntu " + version + " bootstrap for " + arch)
         file.parentFile.mkdirs()
         
-        // Create a minimal ZIP structure that matches what TermuxInstaller expects
+        // Create a Ubuntu rootfs ZIP structure that matches what TermuxInstaller expects
         def zipOutput = new java.util.zip.ZipOutputStream(new FileOutputStream(file))
         
-        // Add basic Ubuntu directory structure
+        // Add Ubuntu directory structure
         addZipEntry(zipOutput, "bin/", true)
+        addZipEntry(zipOutput, "boot/", true)
+        addZipEntry(zipOutput, "dev/", true)
         addZipEntry(zipOutput, "etc/", true)
+        addZipEntry(zipOutput, "home/", true)
         addZipEntry(zipOutput, "lib/", true)
-        addZipEntry(zipOutput, "usr/", true)
-        addZipEntry(zipOutput, "var/", true)
+        addZipEntry(zipOutput, "media/", true)
+        addZipEntry(zipOutput, "mnt/", true)
+        addZipEntry(zipOutput, "opt/", true)
+        addZipEntry(zipOutput, "proc/", true)
+        addZipEntry(zipOutput, "root/", true)
+        addZipEntry(zipOutput, "run/", true)
+        addZipEntry(zipOutput, "sbin/", true)
+        addZipEntry(zipOutput, "srv/", true)
+        addZipEntry(zipOutput, "sys/", true)
         addZipEntry(zipOutput, "tmp/", true)
+        addZipEntry(zipOutput, "usr/", true)
+        addZipEntry(zipOutput, "usr/bin/", true)
+        addZipEntry(zipOutput, "usr/lib/", true)
+        addZipEntry(zipOutput, "usr/local/", true)
+        addZipEntry(zipOutput, "usr/share/", true)
+        addZipEntry(zipOutput, "var/", true)
+        addZipEntry(zipOutput, "var/lib/", true)
+        addZipEntry(zipOutput, "var/log/", true)
         
-        // Add a basic shell
+        // Add essential Ubuntu binaries
+        addZipEntry(zipOutput, "bin/bash", false)
         addZipEntry(zipOutput, "bin/sh", false)
+        addZipEntry(zipOutput, "usr/bin/apt", false)
+        addZipEntry(zipOutput, "usr/bin/dpkg", false)
         
         // Add SYMLINKS.txt file that TermuxInstaller expects
         addZipEntry(zipOutput, "SYMLINKS.txt", false)
         
         zipOutput.close()
-        logger.quiet("Created minimal Ubuntu bootstrap: " + file.absolutePath)
+        logger.quiet("Created Ubuntu " + version + " bootstrap: " + file.absolutePath)
     }
 }
 
@@ -253,11 +274,15 @@ def addZipEntry(zipOutput, String name, boolean isDirectory) {
     
     if (!isDirectory) {
         if (name == "SYMLINKS.txt") {
-            // Add minimal symlinks content
-            zipOutput.write("".getBytes())
-        } else if (name == "bin/sh") {
-            // Add minimal shell content (this will be replaced with actual binaries)
-            zipOutput.write("#!/bin/sh\necho 'Ubuntu shell'\n".getBytes())
+            // Add minimal symlinks content for Ubuntu
+            def symlinks = """
+sh←bin/bash
+bash←bin/bash
+""".trim()
+            zipOutput.write(symlinks.getBytes())
+        } else if (name.startsWith("bin/") || name.startsWith("usr/bin/")) {
+            // Add minimal binary content (this will be replaced with actual binaries)
+            zipOutput.write("#!/bin/bash\necho 'Ubuntu " + name + "'\n".getBytes())
         }
     }
     
