@@ -27,6 +27,10 @@
 
     <!-- Ubuntu Installation -->
     <string name="bootstrap_installer_body">Installing Ubuntu packages…</string>
+    <string name="bootstrap_installer_extracting">Extracting Ubuntu bootstrap archive…</string>
+    <string name="bootstrap_installer_creating_symlinks">Creating system symlinks…</string>
+    <string name="bootstrap_installer_finalizing">Finalizing Ubuntu installation…</string>
+    <string name="bootstrap_installer_verifying">Verifying Ubuntu binaries…</string>
     <string name="bootstrap_error_title">Unable to install Ubuntu</string>
     <string name="bootstrap_error_body">&UBUNTUX_APP_NAME; was unable to install the Ubuntu packages.</string>
     <string name="bootstrap_error_abort">Abort</string>

@@ -153,6 +153,8 @@ final class UbuntuxInstaller {
                         return;
                     }
 
+                    // Update progress dialog to show extraction phase
+                    activity.runOnUiThread(() -> progress.setMessage(activity.getString(R.string.bootstrap_installer_extracting)));
                     Logger.logInfo(LOG_TAG, "Extracting bootstrap archive to prefix staging directory \"" + UBUNTUX_STAGING_PREFIX_DIR_PATH + "\".");
 
                     final byte[] buffer = new byte[8096];
@@ -166,9 +168,13 @@ final class UbuntuxInstaller {
                     // Create essential symlinks for Ubuntu compatibility if needed
                     if (symlinks.isEmpty()) {
                         Logger.logInfo(LOG_TAG, "No SYMLINKS.txt found (expected for Ubuntu rootfs), creating essential symlinks manually");
+                        // Update progress dialog to show symlink creation phase
+                        activity.runOnUiThread(() -> progress.setMessage(activity.getString(R.string.bootstrap_installer_creating_symlinks)));
                         createEssentialUbuntuSymlinks(symlinks);
                     } else {
                         Logger.logInfo(LOG_TAG, "Found " + symlinks.size() + " symlinks to create");
+                        // Update progress dialog to show symlink creation phase
+                        activity.runOnUiThread(() -> progress.setMessage(activity.getString(R.string.bootstrap_installer_creating_symlinks)));
                     }
                     
                     for (Pair<String, String> symlink : symlinks) {
@@ -180,6 +186,8 @@ final class UbuntuxInstaller {
                         }
                     }
 
+                    // Update progress dialog to show finalization phase
+                    activity.runOnUiThread(() -> progress.setMessage(activity.getString(R.string.bootstrap_installer_finalizing)));
                     Logger.logInfo(LOG_TAG, "Moving prefix staging to prefix directory.");
 
                     if (!UBUNTUX_STAGING_PREFIX_DIR.renameTo(UBUNTUX_PREFIX_DIR)) {
@@ -187,6 +195,9 @@ final class UbuntuxInstaller {
                     }
 
                     Logger.logInfo(LOG_TAG, "Bootstrap packages installed successfully.");
+                    
+                    // Update progress dialog to show verification phase
+                    activity.runOnUiThread(() -> progress.setMessage(activity.getString(R.string.bootstrap_installer_verifying)));
                     
                     // Verify essential binaries are present
                     File lsBinary = new File(UBUNTUX_PREFIX_DIR_PATH + "/usr/bin/ls");
